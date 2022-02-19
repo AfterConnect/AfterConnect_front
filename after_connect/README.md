@@ -1,6 +1,6 @@
-# after_connect
+# after_connect_v2
 
-A Flutter application for after connect.
+A new Flutter project.
 
 ## Getting Started
 

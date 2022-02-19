@@ -111,7 +111,7 @@ class SignUpPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
@@ -247,7 +247,7 @@ class LoginPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
@@ -373,7 +373,7 @@ class ForgotPasswordPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),

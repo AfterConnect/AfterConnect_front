@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../util/login_util.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -38,18 +39,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             const SizedBox(
               height: 50.0,
             ),
-            const Text('メールアドレス', style: TextStyle(
-              fontSize: 16.0,
-            ),),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Example@mail.com',
-                ),
-              ),
-            ),
+            EmailInputField(),
             Flexible(
               flex: 1,
               child: Column(

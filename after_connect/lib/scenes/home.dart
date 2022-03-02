@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
+import '../mysql_test/mysql.dart';
 import 'login_page.dart';
-import 'signup_page.dart';
-class Home extends StatelessWidget {
+
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  var db = Mysql();
+  var userName = "";
+  void _getCustomer(){
+    db.getConnection().then((conn){//たぶちがやった限りでは　ここではエラーは起きず、データベースには接続できていないわけではなさそう
+      String sql = 'SELECT * FROM world.city;';
+      conn.query(sql).then((results){
+        print(results.length); //たぶちがやった限りでは results.length はなにやっても 0 つまりなにも返されていない。もしかしたらmysqlのほうでエラーがおきているのかも。
+        for(var row in results){
+          setState(() {
+            userName = row[0];
+          });
+        }
+      });
+      conn.close();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,10 +35,11 @@ class Home extends StatelessWidget {
             flex: 1,
             child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children:  [
                 Text(
-                  'After Connect',
-                  style: TextStyle(
+                  // 'After Connect',
+                  userName,
+                  style: const TextStyle(
                       fontSize: 50.0
                   ),
                 ),
@@ -35,16 +59,17 @@ class Home extends StatelessWidget {
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 1.0, color: Colors.black),
+                    side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
                     minimumSize: const Size.fromHeight(10),
                   ),
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
-                    );
-                  },
+                  onPressed: _getCustomer,
+                  //     (){
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => const SignUpPage()),
+                  //   );
+                  // },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10.0,

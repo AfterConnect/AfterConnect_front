@@ -1,8 +1,6 @@
-import 'package:after_connect_v2/model/login_model.dart';
 import 'package:flutter/material.dart';
 import 'forgot_password_page.dart';
 import '../util/login_util.dart';
-import '../model/login_model.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -11,12 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  LoginRequestModel? requestModel;
-  @override
-  void initState(){
-    super.initState();
-    requestModel = LoginRequestModel();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

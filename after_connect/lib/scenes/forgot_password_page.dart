@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../util/login_util.dart';
+import 'top.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
+  static const routeName = '/forgot_pass';
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
@@ -16,7 +18,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
+            if(Navigator.of(context).canPop()) {
+              Navigator.pop(context);
+            }else{
+              Navigator.pushNamed(context, Top.routeName);
+            }
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),

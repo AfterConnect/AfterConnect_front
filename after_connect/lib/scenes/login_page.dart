@@ -1,15 +1,12 @@
 import 'package:flutter_login/flutter_login.dart';
-import 'package:flutter_login/theme.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'forgot_password_page.dart';
-import 'top.dart';
 import 'home.dart';
 import '../main.dart';
-import '../util/login_util.dart';
+import '../util/authentication.dart';
 
 const users = {
   'test@gmail.com': 'test',
@@ -17,11 +14,14 @@ const users = {
 };
 
 
+
 class LoginPage extends StatelessWidget{
   static const routeName = '/login';
   const LoginPage({Key? key}) : super(key: key);
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
+
+
 
   Future<String?> _signupConfirm(String error, LoginData data) {
     return Future.delayed(loginTime).then((_) {
@@ -37,7 +37,7 @@ class LoginPage extends StatelessWidget{
     });
   }
 
-  //ログイン時の処理
+  /// ログイン時の処理
   Future<String?> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
       if (!users.containsKey(data.name)) {
@@ -63,16 +63,13 @@ class LoginPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    //Authentication.autoLogin();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            if(Navigator.of(context).canPop()) {
-              Navigator.pop(context);
-            }else{
-              Navigator.pushNamed(context, Top.routeName);
-            }
+            Get.back();
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
@@ -92,16 +89,34 @@ class LoginPage extends StatelessWidget{
         onConfirmRecover: _signupConfirm,
         onConfirmSignup: _signupConfirm,
         loginAfterSignUp: true,
+
         loginProviders: [
           LoginProvider(
             icon: FontAwesomeIcons.google,
             label: 'Google',
-            // callback の中にボタンを押された時の処理を書く
-            // GoogleのAPIの処理はここで行う
-            // 処理がうまくいった時は null を返す
+
+            /// callback の中にボタンを押された時の処理を書く
+            /// 処理がうまくいった時は null を返す
             callback: () async {
-              debugPrint('Googleアカウントでの認証');
+
+              FutureBuilder(
+                future: Authentication.initializeFirebase(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasError){
+                    /// エラー発生時
+                    return const Text('初期化中にエラーが発生');
+                  }
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const CircularProgressIndicator();
+
+                  }
+                  return const Text('正常に初期化が完了');
+                },
+              );
+              userGoogle = await Authentication.signInWithGoogle(context: context);
+
               return null;
+
             },
           ),
         ],
@@ -244,7 +259,7 @@ class LoginPage extends StatelessWidget{
       //       borderRadius: inputBorder,
       //     ),
       //   ),
-      buttonTheme: LoginButtonTheme(
+      buttonTheme: const LoginButtonTheme(
         splashColor: Colors.purple,
         backgroundColor: Colors.lightBlueAccent,
         highlightColor: Colors.lightBlueAccent,
@@ -300,7 +315,6 @@ class LoginPage extends StatelessWidget{
 
         //ログイン成功時の画面遷移
         onSubmitAnimationCompleted: () {
-          alreadyLogin = true;
           //ルーティングで画面遷移管理
           //'1'の所を仏壇IDにしても良いかも
           Get.toNamed(Home.routeName + '/1');

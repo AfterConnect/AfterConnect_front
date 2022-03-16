@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
 import 'package:get/get.dart';
 import 'login_page.dart';
 import 'signup_page.dart';
+
 class Top extends StatelessWidget {
   static const routeName = '/top';
   const Top({Key? key}) : super(key: key);
@@ -38,12 +38,11 @@ class Top extends StatelessWidget {
               children: [
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 1.0, color: Colors.black),
+                    side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
-                    //ルーティングで画面遷移管理
                     Get.toNamed(SignUpPage.routeName,arguments:[false, 'ユーザー登録']);
                   },
                   child: Container(
@@ -70,7 +69,6 @@ class Top extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
-                    //ルーティングで画面遷移管理
                     Get.toNamed(LoginPage.routeName,arguments:[true, 'ログイン']);
                   },
                   child: Container(

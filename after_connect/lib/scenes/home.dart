@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../main.dart';
 import 'top.dart';
+import 'menu.dart';
 
 
 class Home extends StatefulWidget {
@@ -30,7 +32,7 @@ class _HomeState extends State<Home> {
         leading: IconButton(
           onPressed: () {
             debugPrint('Homeにてメニューボタンが押されました');
-            Get.toNamed(Top.routeName);
+            Get.toNamed(Menu.routeName);
           },
           icon: const Icon(Icons.menu),
         ),
@@ -77,6 +79,32 @@ class _HomeState extends State<Home> {
           Flexible(
             flex: 2,
             child:Image.network('https://4.bp.blogspot.com/-vpajUL6jZkw/VMIu9i4l5aI/AAAAAAAAq2M/TPYfH7t6kXQ/s800/butsudan.png'),
+          ),
+          Flexible(
+            flex: 1,
+            child: Column(
+              children: [
+                ((){
+                  if (userGoogle != null) {
+
+                    debugPrint(userGoogle?.displayName);
+                    return Text(
+                      'ログインユーザー名：${userGoogle?.displayName}',
+                      style: const TextStyle(
+                          fontSize: 20.0
+                      ),
+                    );
+                  }else {
+                    return const Text(
+                      'Googleアカウントでログインしていません',
+                      style: TextStyle(
+                          fontSize: 20.0
+                      ),
+                    );
+                  }
+                })(),
+              ],
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(

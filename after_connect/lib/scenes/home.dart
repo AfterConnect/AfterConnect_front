@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,7 +10,7 @@ import 'menu.dart';
 class Home extends StatefulWidget {
   static const routeName = '/home';
 
-  const Home({Key? key/*, required this.homeNumber*/}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   //final String homeNumber;
 
@@ -23,6 +24,12 @@ class _HomeState extends State<Home> {
   //初期値は１
   final _homeNum = int.parse(Get.parameters['homeNum']!);
 
+  void _rePage(){
+    setState((){
+      user = FirebaseAuth.instance.currentUser;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,7 @@ class _HomeState extends State<Home> {
         leading: IconButton(
           onPressed: () {
             debugPrint('Homeにてメニューボタンが押されました');
-            Get.toNamed(Menu.routeName);
+            Get.toNamed(Menu.routeName)!.then((value) => _rePage());
           },
           icon: const Icon(Icons.menu),
         ),
@@ -68,7 +75,7 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  '仏様のお名前(仮)',
+                  '故人のお名前(仮)',
                   style: TextStyle(
                       fontSize: 40.0
                   ),
@@ -85,18 +92,18 @@ class _HomeState extends State<Home> {
             child: Column(
               children: [
                 ((){
-                  if (userGoogle != null) {
+                  if (user != null) {
 
-                    debugPrint(userGoogle?.displayName);
+                    debugPrint(user?.displayName);
                     return Text(
-                      'ログインユーザー名：${userGoogle?.displayName}',
+                      'ログインユーザー名：${user?.displayName}',
                       style: const TextStyle(
                           fontSize: 20.0
                       ),
                     );
                   }else {
                     return const Text(
-                      'Googleアカウントでログインしていません',
+                      'ログインしていません',
                       style: TextStyle(
                           fontSize: 20.0
                       ),
@@ -114,42 +121,44 @@ class _HomeState extends State<Home> {
             child: Column(
               children: [
 
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
+                ///_homeNumが1以上の時のみ表示
+                Visibility(
+                  visible: (_homeNum > 1),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
 
-                    side: BorderSide(width: 1.0, color: Colors.black),
-                    primary: Colors.white,
-                    minimumSize: const Size.fromHeight(10),
-                  ),
-
-                  //_homeNumが1以下の時はnullを返す
-                  //こうする事でボタンを押せないようにしている
-                  onPressed: (_homeNum <= 1) ? null :(){
-                    debugPrint('左の仏壇を押したよ');
-                    //ルーティングで画面遷移管理
-                    Get.toNamed(Home.routeName + '/${_homeNum - 1}');
-                  },
-
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 10.0,
+                      side: const BorderSide(width: 1.0, color: Colors.black),
+                      primary: Colors.white,
+                      minimumSize: const Size.fromHeight(10),
                     ),
-                    child:Text(
-                      '左の仏壇へ',
-                      style: ((){
-                        if(_homeNum <= 1) {
-                          return TextStyle(
-                            color: Colors.grey[900],
-                            fontSize: 24.0,
-                          );
-                        }else {
-                          return TextStyle(
-                            color: Colors.grey[900],
-                            fontSize: 24.0,
-                          );
-                        }
-                      })(),
+
+                    onPressed: (){
+                      debugPrint('左の仏壇を押したよ');
+                      //ルーティングで画面遷移管理
+                      Get.toNamed(Home.routeName + '/${_homeNum - 1}');
+                    },
+
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10.0,
+                      ),
+                      child:Text(
+                        '左の仏壇へ',
+                        style: ((){
+                          if(_homeNum <= 1) {
+                            return TextStyle(
+                              color: Colors.grey[900],
+                              fontSize: 24.0,
+                            );
+                          }else {
+                            return TextStyle(
+                              color: Colors.grey[900],
+                              fontSize: 24.0,
+                            );
+                          }
+                        })(),
+                      ),
                     ),
                   ),
                 ),

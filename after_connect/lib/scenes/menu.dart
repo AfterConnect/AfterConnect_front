@@ -1,3 +1,4 @@
+import 'package:after_connect_v2/scenes/user_conf_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -157,6 +158,36 @@ class Menu extends StatelessWidget {
                   height: 10.0,
                 ),
 
+                ///設定
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(width: 1.0, color: Colors.black),
+                    // primary: Colors.white,
+                    minimumSize: const Size.fromHeight(10),
+                  ),
+                  onPressed: (){
+                    //ルーティングで画面遷移管理
+                    Get.toNamed(UserConfPage.routeName);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0,
+                    ),
+                    child:Text(
+                      '設定',
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 10.0,
+                ),
+
                 ///ログアウト
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
@@ -173,7 +204,7 @@ class Menu extends StatelessWidget {
                       middleText: 'この操作は取り消せません',
                       onConfirm: (){
                         Authentication.signOut(context: context);
-                        Get.toNamed(Top.routeName);
+                        Get.offAllNamed(Top.routeName);
                         debugPrint('ログアウトします');
                       },
                       textConfirm: 'ログアウト',

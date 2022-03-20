@@ -3,15 +3,12 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'home.dart';
 import '../main.dart';
 import '../util/authentication.dart';
-
-const users = {
-  'test@gmail.com': 'test',
-  'hoge@gmail.com': '12345',
-};
 
 
 
@@ -24,46 +21,140 @@ class LoginPage extends StatelessWidget{
 
 
   Future<String?> _signupConfirm(String error, LoginData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future.delayed(loginTime).then((_) async{
       debugPrint('デバグですぅ：_signupConfirmが呼び出されました');
-      return null;
+
+      FutureBuilder(
+        future: Authentication.initializeFirebase(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            /// エラー発生時
+            return const Text('初期化中にエラーが発生');
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+          }
+          return const Text('正常に初期化が完了');
+        },
+      );
+
+      await FirebaseAuth.instance.currentUser!.reload();
+      user = FirebaseAuth.instance.currentUser;
+      //await userGoogle!.reload();
+      debugPrint('メール認証: ${FirebaseAuth.instance.currentUser!.emailVerified}');
+      debugPrint('メール認証: ${user!.emailVerified}');
+
+      if (user != null && user!.emailVerified) {
+        debugPrint('メール認証成功');
+        return null;
+      }else if(user != null){
+        Get.defaultDialog(
+          title: 'メール認証が完了していません',
+          middleText: 'メール内のリンクをクリックして下さい',
+          textConfirm: '再送信',
+          onConfirm: (){
+            user!.sendEmailVerification();
+            Get.snackbar('確認メールを再送信しました', 'メール内のリンクをクリックして下さい');
+          },
+          textCancel: '閉じる',
+        );
+        return 'メール認証が完了していません';
+      }else{
+        return 'メール認証に失敗しました';
+      }
+
     });
   }
 
   Future<String?> _signupUser(SignupData data) {
-    return Future.delayed(loginTime).then((_) {
+    return Future.delayed(loginTime).then((_) async{
       debugPrint('デバグですぅ：_signupUserが呼び出されました');
-      return null;
+
+      FutureBuilder(
+        future: Authentication.initializeFirebase(),
+        builder: (context, snapshot) {
+          if(snapshot.hasError){
+            /// エラー発生時
+            return const Text('初期化中にエラーが発生');
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+
+          }
+          return const Text('正常に初期化が完了');
+        },
+      );
+
+      user = await Authentication.signUpWithMail(data);
+
+
+      if(user != null) {
+        debugPrint('ユーザー登録成功');
+        user = FirebaseAuth.instance.currentUser;
+        return null;
+      }else{
+        return 'ユーザー登録に失敗しました';
+      }
+    });
+
+  }
+
+  /// メールアドレスでのログイン時処理
+  Future<String?> _loginUser(LoginData data){
+    return Future.delayed(loginTime).then((_) async {
+      FutureBuilder(
+        future: Authentication.initializeFirebase(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            /// エラー発生時
+            return const Text('初期化中にエラーが発生');
+          }
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+          }
+          return const Text('正常に初期化が完了');
+        },
+      );
+
+      user =
+      await Authentication.signInWithMail(data.name, data.password);
+
+      if (user != null && user!.emailVerified) {
+        debugPrint('ログイン成功');
+        return null;
+      }else if(user != null){
+          //userGoogle!.sendEmailVerification();
+          Get.defaultDialog(
+            title: 'メール認証が完了していません',
+            middleText: '確認メール内のリンクをクリックして下さい',
+            textConfirm: '再送信',
+            onConfirm: (){
+              user!.sendEmailVerification();
+              Get.snackbar('確認メールを再送信しました', 'メール内のリンクをクリックして下さい');
+            },
+            textCancel: '閉じる',
+          );
+          return 'メール認証が完了していません';
+      }else{
+        return 'ログインに失敗しました';
+      }
     });
   }
 
-  /// ログイン時の処理
-  Future<String?> _loginUser(LoginData data) {
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
-        return 'メールアドレスが登録されていません';
-      }
-      if (users[data.name] != data.password) {
-        return 'パスワードが違います';
-      }
-      debugPrint('ログイン成功');
-      return null;
-    });
-  }
-
+  ///パスワード再設定時の処理
   Future<String?> _recoverPassword(String name) {
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(name)) {
-        return 'メールアドレスが登録されていません';
+    return Future.delayed(loginTime).then((_) async{
+      if(await Authentication.recoverPasswordOfMail(name) == true){
+        return null;
+      }else{
+        return 'パスワードの再設定時にエラーが発生しました';
       }
-      return null;
     });
   }
 
 
   @override
   Widget build(BuildContext context) {
-    //Authentication.autoLogin();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -86,9 +177,8 @@ class LoginPage extends StatelessWidget{
 
       body: FlutterLogin(
         navigateBackAfterRecovery: true,
-        onConfirmRecover: _signupConfirm,
-        onConfirmSignup: _signupConfirm,
-        loginAfterSignUp: true,
+        //onConfirmSignup: _signupConfirm,
+        loginAfterSignUp: false,
 
         loginProviders: [
           LoginProvider(
@@ -113,7 +203,7 @@ class LoginPage extends StatelessWidget{
                   return const Text('正常に初期化が完了');
                 },
               );
-              userGoogle = await Authentication.signInWithGoogle(context: context);
+              user = await Authentication.signInWithGoogle(context: context);
 
               return null;
 
@@ -135,23 +225,8 @@ class LoginPage extends StatelessWidget{
         additionalSignupFields: [
           const UserFormField(
               keyName: 'ニックネーム', icon: Icon(FontAwesomeIcons.userAlt)),
-          const UserFormField(keyName: '苗字'),
-          const UserFormField(keyName: '名前'),
-          UserFormField(
-            keyName: '電話番号',
-            displayName: '電話番号',
-            userType: LoginUserType.phone,
-            fieldValidator: (value) {
-              var phoneRegExp = RegExp(
-                  '^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}\$');
-              if (value != null &&
-                  value.length < 7 &&
-                  !phoneRegExp.hasMatch(value)) {
-                return "正しくない電話番号です";
-              }
-              return null;
-            },
-          ),
+          //const UserFormField(keyName: '苗字'),
+          //const UserFormField(keyName: '名前'),
         ],
 
       // login の画面か signup の画面か選択する
@@ -283,6 +358,8 @@ class LoginPage extends StatelessWidget{
         passwordValidator: (value) {
           if (value!.isEmpty) {
             return 'パスワードが入力されていません';
+          }else if(value.length < 6){
+            return 'パスワードは6文字以上にして下さい';
           }
           return null;
         },
@@ -313,7 +390,7 @@ class LoginPage extends StatelessWidget{
           return _signupUser(signupData);
         },
 
-        //ログイン成功時の画面遷移
+        /// ログイン成功時の画面遷移
         onSubmitAnimationCompleted: () {
           //ルーティングで画面遷移管理
           //'1'の所を仏壇IDにしても良いかも
@@ -327,7 +404,7 @@ class LoginPage extends StatelessWidget{
           return _recoverPassword(name);
           // Show new password dialog
         },
-        showDebugButtons: true,
+        showDebugButtons: false,
       ),
     );
   }

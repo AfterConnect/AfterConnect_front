@@ -11,10 +11,13 @@ import 'scenes/signup_page.dart';
 import 'scenes/home.dart';
 import 'scenes/unknown_route_page.dart';
 import 'scenes/menu.dart';
+import 'scenes/user_conf_page.dart';
+import 'scenes/user_name_change_page.dart';
 import 'util/authentication.dart';
 
 
-User? userGoogle;
+User? user;
+//User? userMail;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +46,14 @@ void main() async {
               name: Home.routeName + '/:homeNum',
               page: () => const Home(),
           ),
+
+          GetPage(name: UserConfPage.routeName, page: () => const UserConfPage()),
+
+            GetPage(
+                name: UserConfPage.routeName + UserNameChangePage.routeName,
+                page: () => const UserNameChangePage()
+            ),
+
 
           GetPage(name: Menu.routeName, page: () => const Menu()),
 

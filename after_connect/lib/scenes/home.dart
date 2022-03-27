@@ -145,19 +145,10 @@ class _HomeState extends State<Home> {
                       ),
                       child:Text(
                         '左の仏壇へ',
-                        style: ((){
-                          if(_homeNum <= 1) {
-                            return TextStyle(
-                              color: Colors.grey[900],
-                              fontSize: 24.0,
-                            );
-                          }else {
-                            return TextStyle(
-                              color: Colors.grey[900],
-                              fontSize: 24.0,
-                            );
-                          }
-                        })(),
+                        style:TextStyle(
+                            color: Colors.grey[900],
+                            fontSize: 24.0,
+                        ),
                       ),
                     ),
                   ),

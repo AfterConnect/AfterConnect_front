@@ -74,6 +74,8 @@ class _UserNameChangePageState extends State<UserNameChangePage> {
                     middleText: '',
                     textCancel: '戻る',
                   );
+                  //キーボードを閉じる
+                  FocusScope.of(context).requestFocus(FocusNode());
                 },
                 child: const Text('変更')),
           ],

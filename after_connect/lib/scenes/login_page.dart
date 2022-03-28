@@ -205,7 +205,13 @@ class LoginPage extends StatelessWidget{
               );
               user = await Authentication.signInWithGoogle(context: context);
 
-              return null;
+              if(user != null){
+                return null;
+              }else{
+                return 'もう一度お試しください';
+              }
+
+
 
             },
           ),

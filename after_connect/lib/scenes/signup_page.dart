@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'login_page.dart';
+import 'top.dart';
 import '../util/login_util.dart';
 class SignUpPage extends StatefulWidget {
+  static const routeName = '/signup';
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
@@ -16,7 +19,11 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
+            if(Navigator.of(context).canPop()) {
+              Navigator.pop(context);
+            }else{
+              Get.toNamed(Top.routeName);
+            }
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
@@ -60,10 +67,8 @@ class _SignUpPageState extends State<SignUpPage> {
               alignment: Alignment.bottomCenter,
               child: TextButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                  //ルーティングで画面遷移管理
+                  Navigator.pushNamed(context, LoginPage.routeName);
                 },
                 child: const Text(
                   '既にアカウントをお持ちの方',

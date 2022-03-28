@@ -1,11 +1,72 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'signup_page.dart';
-class Home extends StatelessWidget {
+import 'package:get/get.dart';
+
+import '../main.dart';
+import 'top.dart';
+import 'menu.dart';
+
+
+class Home extends StatefulWidget {
+  static const routeName = '/home';
+
   const Home({Key? key}) : super(key: key);
+
+  //final String homeNumber;
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  //いくつ目の仏壇のかを表す変数
+  //初期値は１
+  final _homeNum = int.parse(Get.parameters['homeNum']!);
+
+  void _rePage(){
+    setState((){
+      user = FirebaseAuth.instance.currentUser;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            debugPrint('Homeにてメニューボタンが押されました');
+            Get.toNamed(Menu.routeName)!.then((value) => _rePage());
+          },
+          icon: const Icon(Icons.menu),
+        ),
+
+        actions: [
+          IconButton(
+            onPressed: () {
+              debugPrint('Homeにて共有ボタンが押されました');
+              Get.toNamed(Top.routeName);
+            },
+            icon: const Icon(Icons.ios_share),
+          ),
+        ],
+
+        iconTheme: const IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+
+        title:Text(
+          '仏壇No.$_homeNum',
+          style: const TextStyle(
+            color: Colors.black,
+          ),
+        ),
+
+      ),
+
       body:Column(
         children: <Widget>[
           Flexible(
@@ -14,9 +75,9 @@ class Home extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  'After Connect',
+                  '故人のお名前(仮)',
                   style: TextStyle(
-                      fontSize: 50.0
+                      fontSize: 40.0
                   ),
                 ),
               ],
@@ -26,6 +87,32 @@ class Home extends StatelessWidget {
             flex: 2,
             child:Image.network('https://4.bp.blogspot.com/-vpajUL6jZkw/VMIu9i4l5aI/AAAAAAAAq2M/TPYfH7t6kXQ/s800/butsudan.png'),
           ),
+          Flexible(
+            flex: 1,
+            child: Column(
+              children: [
+                ((){
+                  if (user != null) {
+
+                    debugPrint(user?.displayName);
+                    return Text(
+                      'ログインユーザー名：${user?.displayName}',
+                      style: const TextStyle(
+                          fontSize: 20.0
+                      ),
+                    );
+                  }else {
+                    return const Text(
+                      'ログインしていません',
+                      style: TextStyle(
+                          fontSize: 20.0
+                      ),
+                    );
+                  }
+                })(),
+              ],
+            ),
+          ),
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 50.0,
@@ -33,35 +120,44 @@ class Home extends StatelessWidget {
             ),
             child: Column(
               children: [
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(width: 1.0, color: Colors.black),
-                    // primary: Colors.white,
-                    minimumSize: const Size.fromHeight(10),
-                  ),
-                  onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignUpPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 10.0,
+
+                ///_homeNumが1以上の時のみ表示
+                Visibility(
+                  visible: (_homeNum > 1),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+
+                      side: const BorderSide(width: 1.0, color: Colors.black),
+                      primary: Colors.white,
+                      minimumSize: const Size.fromHeight(10),
                     ),
-                    child:Text(
-                      'ユーザー登録',
-                      style: TextStyle(
-                        color: Colors.grey[900],
-                        fontSize: 24.0,
+
+                    onPressed: (){
+                      debugPrint('左の仏壇を押したよ');
+                      //ルーティングで画面遷移管理
+                      Get.toNamed(Home.routeName + '/${_homeNum - 1}');
+                    },
+
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10.0,
+                      ),
+                      child:Text(
+                        '左の仏壇へ',
+                        style:TextStyle(
+                            color: Colors.grey[900],
+                            fontSize: 24.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
+
                 const SizedBox(
                   height: 10.0,
                 ),
+
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
@@ -69,10 +165,45 @@ class Home extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
-                    );
+                    if(/* ここで右の仏壇が登録されているか判定 */ true){
+                      //登録されている場合
+                      //ルーティングで画面遷移管理
+                      Get.toNamed(Home.routeName + '/${_homeNum + 1}');
+                    }else{
+                      //仏壇ページを増やす際の処理
+                      //ルーティングで画面遷移管理(仮)
+                      //Get.toNamed(AddHome.routeName);
+                    }
+                  },
+
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0,
+                    ),
+                    child:Text(
+                      '右の仏壇へ',
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 10.0,
+                ),
+
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(width: 1.0, color: Colors.black),
+                    // primary: Colors.white,
+                    minimumSize: const Size.fromHeight(10),
+                  ),
+                  onPressed: (){
+                    //ルーティングで画面遷移管理
+                    //Navigator.pushNamed(context, HogeHoge.routeName);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -80,7 +211,7 @@ class Home extends StatelessWidget {
                       horizontal: 10.0,
                     ),
                     child:Text(
-                      'ログイン',
+                      'お供え',
                       style: TextStyle(
                         color: Colors.grey[900],
                         fontSize: 24.0,
@@ -95,4 +226,5 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -1,9 +1,8 @@
-# AfterConnect_front
+# feature/login
 
-## ブランチ名
+## 実装概要
 
 ```
-- master
-    -develop
-        -feature/各自追加する機能
+flutter_loginパッケージを用いてログイン画面を実装
+Googleアカウントでのログイン、メールアドレス認証でのログイン機能を実装
 ```

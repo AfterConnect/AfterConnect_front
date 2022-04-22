@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.after_connect_v2">
+<uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="after_connect_v2"
         android:name="${applicationName}"

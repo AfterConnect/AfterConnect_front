@@ -65,7 +65,7 @@ class UsersDb {
   }
 
   ///仏壇Idを返す
-  String? getBuddId(String? userId,int? IdNum){
+  Future<String?> getBuddId(String? userId,int? IdNum)async{
     debugPrint('ユーザID：$userId,IdNum：$IdNum');
     List? buddIdsList;
     getBuddsList(userId).then((value) {

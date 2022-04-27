@@ -95,6 +95,7 @@ class Home extends StatelessWidget {
             }
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
+              debugPrint('アドポスト入った');
               //model.fetchBuddInfo();
               if(model.budd == null){
                 if(_checkNum == 0){

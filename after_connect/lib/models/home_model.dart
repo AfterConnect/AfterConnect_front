@@ -25,11 +25,6 @@ class HomeModel extends ChangeNotifier{
     _usersStream =
         FirebaseFirestore.instance.collection('users/${user!.email}/buddsList').snapshots();
     fetchBuddId(_buddsNum!);
-    ///無限ループ(for文)のなかでif文を入れるとどう？
-    //debugPrint('コンストラクタでテスト：buddIdの値→$buddId');
-    /*_buddsStream =
-        FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
-    fetchBuddInfo();*/
   }
 
   void fetchBuddId(String buddNum){

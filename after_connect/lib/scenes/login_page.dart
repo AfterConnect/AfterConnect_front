@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
 import '../main.dart';
 import '../util/authentication.dart';
+import '../db/budd_db.dart';
 
 
 
@@ -400,6 +401,7 @@ class LoginPage extends StatelessWidget{
         onSubmitAnimationCompleted: () {
           //ルーティングで画面遷移管理
           //'1'の所を仏壇IDにしても良いかも
+          BuddDb().makeBudd();
           Get.toNamed(Home.routeName + '/1');
         },
 

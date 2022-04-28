@@ -15,25 +15,28 @@ import '../db/image_db.dart';
 import '../models/home_model.dart';
 
 
-class Home extends StatelessWidget {
+
+class Home extends StatefulWidget {
   static const routeName = '/home';
   //static final _homeNum = int.parse(Get.parameters['homeNum']!);
   //static final _buddId = UsersDb().getBuddId(user!.email, _homeNum - 1);
   const Home({Key? key}) : super(key: key);
 
   @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
   Widget build(BuildContext context){
     final _homeNum = int.parse(Get.parameters['homeNum']!);
     int _checkNum = 0;
-    //final _buddId = UsersDb().getBuddId(user!.email, _homeNum - 1);
 
-    //Timer(const Duration(milliseconds: 10),HomeModel());
 
     return MaterialApp(
-      //title:'仏壇ホーム',
       home: ChangeNotifierProvider<HomeModel>(
         //画面が作成されたタイミングで HomeModel が発火
-        create: (_) => HomeModel(_homeNum),
+        create: (_) => HomeModel(_homeNum)..fetchBuddId((_homeNum-1).toString()),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -85,14 +88,8 @@ class Home extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 ),
               );
-              /*return Center(
-                child:Container(
-                  color: Colors.grey,
-                  child: const CircularProgressIndicator(),
-                ),
-              );*/
-
             }
+            debugPrint('微妙なところ通った！！');
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               debugPrint('アドポスト入った');

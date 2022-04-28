@@ -9,8 +9,6 @@ import '../main.dart';
 
 class HomeModel extends ChangeNotifier{
   String? _buddsNum;
-  //final Stream<QuerySnapshot> _buddsStream =
-  //    FirebaseFirestore.instance.collection('budds').snapshots();
   Stream<QuerySnapshot>? _usersStream;
   Stream<DocumentSnapshot>? _buddsStream;
   String? buddId;
@@ -18,42 +16,39 @@ class HomeModel extends ChangeNotifier{
 
 
   HomeModel(int homeId){
-    debugPrint('HomeModelのコンストラクタだよ！');
-    //_buddsStream = FirebaseFirestore.instance.collection(collectionPath)
     _buddsNum = (homeId - 1).toString();
-    //final String _buddsNum = (buddNum - 1).toString();
     _usersStream =
         FirebaseFirestore.instance.collection('users/${user!.email}/buddsList').snapshots();
     fetchBuddId(_buddsNum!);
   }
 
-  void fetchBuddId(String buddNum){
-    debugPrint('fetchBuddIdに入ったよ！');
-    if(_usersStream != null) {
-      _usersStream!.listen((QuerySnapshot snapshot) {
-        final String buddId = snapshot.docs.map((DocumentSnapshot document){
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          final String buddId = data[buddNum];
-          //debugPrint('テスト：buddIdの値→$buddId');
-          this.buddId = buddId;
-          return buddId;
-        }).toString();
-        //this.buddId = buddId;
-        debugPrint('テスト：buddIdの値→${this.buddId}');
-      });
-    }
-    debugPrint('fetchBuddId抜けるよ！');
+  void notify(){
     notifyListeners();
   }
 
+  void fetchBuddId(String buddNum)async{
+    debugPrint('fetchBuddIdに入ったよ！');
+    if(_usersStream != null) {
+      _usersStream!.listen((QuerySnapshot snapshot) {
+        final String _buddId = snapshot.docs.map((DocumentSnapshot document){
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          final String buddId = data[buddNum];
+          this.buddId = buddId;
+          return buddId;
+        }).toString();
+        debugPrint('テスト：buddIdの値→$buddId');
+      });
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    notifyListeners();
+  }
+
+
   void fetchBuddInfo(){
-    debugPrint('fetchBuddInfoに入ったよ！');
     _buddsStream =
         FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
-    if(_buddsStream == null){
-      debugPrint('_buddsStreamの中身はnull！');
-    }else {
+    if(_buddsStream != null){
       _buddsStream!.listen((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String buddId = document.id;
@@ -65,11 +60,6 @@ class HomeModel extends ChangeNotifier{
         notifyListeners();
       });
     }
-    debugPrint('fetchBuddInfo抜けるよ！');
-    //WidgetsBinding.instance!.addPostFrameCallback((_) {
-      //notifyListeners();
-    //});
-    //notifyListeners();
   }
 
 

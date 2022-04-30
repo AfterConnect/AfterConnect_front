@@ -13,6 +13,7 @@ import '../db/users_db.dart';
 import '../db/budd_db.dart';
 import '../db/image_db.dart';
 import '../models/home_model.dart';
+import '../models/budd_list_model.dart';
 
 
 
@@ -27,16 +28,33 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int _homeNum = int.parse(Get.parameters['homeNum']!);
+  void _leftPage(){
+    setState((){
+      _homeNum--;
+    });
+  }
+  void _rightPage(){
+    setState((){
+      _homeNum++;
+    });
+  }
+  void rePage(){
+    setState((){
+
+    });
+  }
+
   @override
   Widget build(BuildContext context){
-    final _homeNum = int.parse(Get.parameters['homeNum']!);
+
     int _checkNum = 0;
 
 
     return MaterialApp(
-      home: ChangeNotifierProvider<HomeModel>(
+      home: ChangeNotifierProvider<BuddListModel>(
         //画面が作成されたタイミングで HomeModel が発火
-        create: (_) => HomeModel(_homeNum)..fetchBuddId((_homeNum-1).toString()),
+        create: (_) => BuddListModel()..fetchBuddList(),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -47,6 +65,7 @@ class _HomeState extends State<Home> {
                 String? _imgUrl = '初期状態だよ';
                 _imgUrl = await ImageDb().imgDownloadPath('default/budd/budd_photo.png');
                 debugPrint(_imgUrl);
+                //debugPrint(BuddListModel());
                 Get.toNamed(Menu.routeName)!.then((value) {
                   user = FirebaseAuth.instance.currentUser;
                 });
@@ -77,10 +96,10 @@ class _HomeState extends State<Home> {
 
           ),
 
-          body:Consumer<HomeModel>(builder: (context, model, child) {
+          body:Consumer<BuddListModel>(builder: (context, model, child) {
 
 
-            if(model.buddId == null){
+            if(BuddListModel.BuddListNum == null){
               debugPrint('一つ目のローディング！');
               return Container(
                 color: Colors.black38,
@@ -89,26 +108,18 @@ class _HomeState extends State<Home> {
                 ),
               );
             }
-            debugPrint('微妙なところ通った！！');
-
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              debugPrint('アドポスト入った');
-              //model.fetchBuddInfo();
-              if(model.budd == null){
-                if(_checkNum == 0){
-                  debugPrint('二つ目のローディング！その１！');
-                  //WidgetsBinding.instance!.addPostFrameCallback((_) {
-                    model.fetchBuddInfo();
-                  //});
-                  _checkNum = 1;
-                }
-                debugPrint('二つ目のローディング！その２！');
-                //return const CircularProgressIndicator();
-              }
-            });
+            if(BuddListModel.BuddList!.length < BuddListModel.BuddListNum!){
+              debugPrint('二つ目のローディング！');
+              return Container(
+                color: Colors.black38,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
 
 
-            final budd = model.budd;
+            final budd = BuddListModel.BuddList;
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -134,7 +145,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          budd.buddName,
+                          budd.elementAt(_homeNum-1).buddName,
                           style: const TextStyle(
                               backgroundColor: Colors.black12,
                               fontSize: 40.0
@@ -157,7 +168,7 @@ class _HomeState extends State<Home> {
                                   child: SizedBox(
                                     width: 100,
                                     height: 100,
-                                    child: Image.network('${budd.buddPhoto}'),
+                                    child: Image.network('${budd.elementAt(_homeNum-1).buddPhoto}'),
                                   ),
                                 ),
                                 onTap: () async {
@@ -224,7 +235,9 @@ class _HomeState extends State<Home> {
                             onPressed: () {
                               debugPrint('左の仏壇を押したよ');
                               //ルーティングで画面遷移管理
-                              Get.toNamed(Home.routeName + '/${_homeNum - 1}');
+                              //Get.toNamed(Home.routeName + '/${_homeNum - 1}');
+                              _leftPage();
+
                             },
 
                             child: Container(
@@ -256,14 +269,10 @@ class _HomeState extends State<Home> {
                             minimumSize: const Size.fromHeight(10),
                           ),
                           onPressed: () {
-                            if (/* ここで右の仏壇が登録されているか判定 */ true) {
-                              //登録されている場合
-                              //ルーティングで画面遷移管理
-                              Get.toNamed(Home.routeName + '/${_homeNum + 1}');
-                            } else {
-                              //仏壇ページを増やす際の処理
-                              //ルーティングで画面遷移管理(仮)
-                              //Get.toNamed(AddHome.routeName);
+                            if(_homeNum >= budd.length){
+
+                            }else{
+                              _rightPage();
                             }
                           },
 
@@ -297,6 +306,7 @@ class _HomeState extends State<Home> {
                           onPressed: () {
                             //ルーティングで画面遷移管理
                             //Navigator.pushNamed(context, HogeHoge.routeName);
+                            BuddListModel.DataCheck = false;
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(

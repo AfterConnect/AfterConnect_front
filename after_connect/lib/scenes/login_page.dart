@@ -11,11 +11,12 @@ import '../main.dart';
 import '../util/authentication.dart';
 import '../db/budd_db.dart';
 
-
+bool _signupCheck = false;
 
 class LoginPage extends StatelessWidget{
   static const routeName = '/login';
   const LoginPage({Key? key}) : super(key: key);
+
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
@@ -47,6 +48,7 @@ class LoginPage extends StatelessWidget{
 
       if (user != null && user!.emailVerified) {
         debugPrint('メール認証成功');
+        _signupCheck = true;
         return null;
       }else if(user != null){
         Get.defaultDialog(
@@ -398,10 +400,14 @@ class LoginPage extends StatelessWidget{
         },
 
         /// ログイン成功時の画面遷移
-        onSubmitAnimationCompleted: () {
+        onSubmitAnimationCompleted: () async{
+          //ユーザー登録直後のログイン時のみ仏壇を2つ作る
+          if(_signupCheck){
+            for(int i = 0; i < 2 ; i++){
+              BuddDb().makeBudd();
+            }
+          }
           //ルーティングで画面遷移管理
-          //'1'の所を仏壇IDにしても良いかも
-          BuddDb().makeBudd();
           Get.toNamed(Home.routeName + '/1');
         },
 

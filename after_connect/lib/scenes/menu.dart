@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'home.dart';
 import 'top.dart';
 import '../util/authentication.dart';
+import '../models/budd_list_model.dart';
 
 class Menu extends StatelessWidget {
   static const routeName = '/menu';
@@ -47,6 +48,7 @@ class Menu extends StatelessWidget {
                   ),
                   onPressed: (){
                     //ルーティングで画面遷移管理
+                    //BuddListModel.DataCheck = true;
                     Get.toNamed(Home.routeName + '/1');
                   },
                   child: Container(
@@ -203,6 +205,8 @@ class Menu extends StatelessWidget {
                       title: 'ログアウトしますか？',
                       middleText: 'この操作は取り消せません',
                       onConfirm: (){
+                        BuddListModel.DataCheck = false;
+                        BuddListModel.BuddListNum = null;
                         Authentication.signOut(context: context);
                         Get.offAllNamed(Top.routeName);
                         debugPrint('ログアウトします');

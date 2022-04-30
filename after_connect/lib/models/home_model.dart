@@ -6,8 +6,9 @@ import 'dart:async';
 import '../db/users_db.dart';
 import '../db/budd_db.dart';
 import '../main.dart';
+import 'budd_list_model.dart';
 
-class HomeModel extends ChangeNotifier{
+class HomeModel {
   String? _buddsNum;
   Stream<QuerySnapshot>? _usersStream;
   Stream<DocumentSnapshot>? _buddsStream;
@@ -19,11 +20,17 @@ class HomeModel extends ChangeNotifier{
     _buddsNum = (homeId - 1).toString();
     _usersStream =
         FirebaseFirestore.instance.collection('users/${user!.email}/buddsList').snapshots();
-    fetchBuddId(_buddsNum!);
+    //fetchBuddId(_buddsNum!);
   }
 
-  void notify(){
-    notifyListeners();
+  String? getBuddId(){
+    return buddId;
+  }
+  Budd? getBudd(){
+    return budd;
+  }
+  Stream<QuerySnapshot>? getUserStream(){
+
   }
 
   void fetchBuddId(String buddNum)async{
@@ -37,10 +44,13 @@ class HomeModel extends ChangeNotifier{
           return buddId;
         }).toString();
         debugPrint('テスト：buddIdの値→$buddId');
+
       });
     }
-    await Future<void>.delayed(const Duration(milliseconds: 50));
-    notifyListeners();
+    while(buddId == null){
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+    }
+    //notifyListeners();
   }
 
 
@@ -57,7 +67,8 @@ class HomeModel extends ChangeNotifier{
         debugPrint('テスト：buddNameの値→$buddName');
         debugPrint('テスト：buddPhotoの値→$buddPhoto');
         budd = Budd(buddId, buddName, buddPhoto);
-        notifyListeners();
+        BuddListModel.DataCheck = false;
+        //notifyListeners();
       });
     }
   }

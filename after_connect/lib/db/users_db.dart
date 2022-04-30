@@ -1,3 +1,4 @@
+import 'package:after_connect_v2/db/budd_db.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
@@ -59,7 +60,15 @@ class UsersDb {
         IDlist.add(IDSnapshot['$i']);
         //debugPrint('${IDSnapshot['$i']} をIDリストに入れたよ');
       }
-    }
+    }/*else if(user != null){
+      for(int i = 0; i < 2 ; i++){
+        debugPrint('$i回目の仏壇作成！');
+        //BuddDb().makeBudd();
+        await Future<void>.delayed(const Duration(milliseconds: 3000));
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 30000));
+      return getBuddsList(userId);
+    }*/
     IDlist.forEach((element) {debugPrint(element); });
     return IDlist;
   }

@@ -47,9 +47,6 @@ class HomeModel {
 
       });
     }
-    while(buddId == null){
-      await Future<void>.delayed(const Duration(milliseconds: 10));
-    }
     //notifyListeners();
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../db/budd_db.dart';
 import '../main.dart';
 import 'home_model.dart';
 import '../domain/budd.dart';
@@ -17,13 +18,34 @@ class BuddListModel extends ChangeNotifier {
   static List<Budd>? BuddList = <Budd>[];
   static int? BuddListNum;
   HomeModel? _homeModel;
+  DocumentSnapshot? docSnapshot;
 
 
   BuddListModel(){
-    UsersDb().getBuddsList(user!.email).then((value){
-      BuddIdList = value as List<String>;
-      if(BuddIdList != null) BuddListNum = BuddIdList!.length;
+    checkBuddMade().then((value) {
+      if(value){
+        UsersDb().getBuddsList(user!.email).then((value){
+          BuddIdList = value as List<String>;
+          if(BuddIdList != null) BuddListNum = BuddIdList!.length;
+        });
+      }
     });
+  }
+
+  ///仏壇データが存在するかを確認
+  ///なければ(ユーザー登録直後なら)2つ仏壇を作る
+  Future<bool> checkBuddMade()async{
+    docSnapshot = await FirebaseFirestore.instance.doc('users/${user!.email}').get();
+    if(docSnapshot!.exists){
+      return true;
+    }else{
+      for(int i = 0; i < 2 ; i++){
+        debugPrint('$i回目の仏壇作成！');
+        BuddDb().makeBudd();
+        await Future<void>.delayed(const Duration(milliseconds: 1000));
+      }
+      return true;
+    }
   }
 
   void fetchBuddList()async{

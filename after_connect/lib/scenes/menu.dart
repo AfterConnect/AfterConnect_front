@@ -2,6 +2,7 @@ import 'package:after_connect_v2/scenes/user_conf_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../db/budd_db.dart';
 import 'home.dart';
 import 'top.dart';
 import '../util/authentication.dart';
@@ -78,6 +79,7 @@ class Menu extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
+                    //BuddDb().makeBudd();
                     //ルーティングで画面遷移管理
                     //Get.toNamed(HogeHoge.routeName);
                   },

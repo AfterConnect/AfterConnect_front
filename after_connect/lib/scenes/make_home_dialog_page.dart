@@ -2,6 +2,7 @@ import 'package:after_connect_v2/scenes/add_home_dialog_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../db/budd_db.dart';
+import '../domain/budd.dart';
 import '../models/budd_list_model.dart';
 import 'modal_overlay.dart';
 import 'home.dart';
@@ -10,6 +11,11 @@ class MakeHomeDialogPage {
 
   BuildContext context;
   MakeHomeDialogPage(this.context) : super();
+  List<Budd>? budd;
+
+  void setBudd(List<Budd> budd){
+    this.budd = budd;
+  }
 
   /*
    * 表示
@@ -131,8 +137,10 @@ class MakeHomeDialogPage {
                         ),
                       ),
                       onPressed: () {
+                        AddHomeDialogPage addHome = AddHomeDialogPage(context);
                         hideCustomDialog();
-                        AddHomeDialogPage(context).showCustomDialog();
+                        addHome.setBudd(budd!);
+                        addHome.showCustomDialog();
                       },
                     ),
                     const SizedBox(

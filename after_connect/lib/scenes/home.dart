@@ -31,6 +31,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _homeNum = int.parse(Get.parameters['homeNum']!);
+  List<Budd>? budd;
   void _leftPage(){
     setState((){
       _homeNum--;
@@ -84,7 +85,11 @@ class _HomeState extends State<Home> {
                   debugPrint('Homeにて共有ボタンが押されました');
                   ShareCodeDialogPage shareCode = ShareCodeDialogPage(context);
                   shareCode.setHomeNum(_homeNum);
-                  shareCode.showCustomDialog();
+                  if(budd != null){
+                    shareCode.setBudd(budd!);
+                    shareCode.showCustomDialog();
+                  }
+
                   //Get.toNamed(Top.routeName);
                 },
                 icon: const Icon(Icons.ios_share),
@@ -127,7 +132,7 @@ class _HomeState extends State<Home> {
             }
 
 
-            final budd = BuddListModel.BuddList;
+            budd = BuddListModel.BuddList;
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -153,7 +158,7 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          budd.elementAt(_homeNum-1).buddName,
+                          budd!.elementAt(_homeNum-1).buddName,
                           style: const TextStyle(
                               backgroundColor: Colors.black12,
                               fontSize: 40.0
@@ -176,7 +181,7 @@ class _HomeState extends State<Home> {
                                   child: SizedBox(
                                     width: 100,
                                     height: 100,
-                                    child: Image.network('${budd.elementAt(_homeNum-1).buddPhoto}'),
+                                    child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
                                   ),
                                 ),
                                 onTap: () async {
@@ -277,8 +282,10 @@ class _HomeState extends State<Home> {
                             minimumSize: const Size.fromHeight(10),
                           ),
                           onPressed: () {
-                            if(_homeNum >= budd.length){
-                              MakeHomeDialogPage(context).showCustomDialog();
+                            if(_homeNum >= budd!.length){
+                              MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
+                              makeHome.setBudd(budd!);
+                              makeHome.showCustomDialog();
                             }else{
                               _rightPage();
                             }

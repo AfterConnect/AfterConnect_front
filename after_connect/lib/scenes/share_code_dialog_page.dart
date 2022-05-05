@@ -1,3 +1,4 @@
+import 'package:after_connect_v2/domain/budd.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../db/budd_db.dart';
@@ -14,9 +15,13 @@ class ShareCodeDialogPage {
   final _formkey = GlobalKey<FormState>();
   String? _shareCode;
   int? _homeNum;
+  List<Budd>? budd;
 
   void setHomeNum(int homeNum){
     _homeNum = homeNum;
+  }
+  void setBudd(List<Budd> budd){
+    this.budd = budd;
   }
 
   /*
@@ -169,25 +174,41 @@ class ShareCodeDialogPage {
                           _formkey.currentState!.save();
                           if(_shareCode != null && _shareCode!.isNotEmpty && _shareCode!.length == 10) {
                             debugPrint('入力された共有コードは「$_shareCode」です');
-                            await BuddDb().checkIsUsed(_shareCode).then((value) async{
-                              if(value == true){
-                                UsersDb().setBuddId(_shareCode!);
-                                await Future<void>.delayed(const Duration(milliseconds: 500));
-                                BuddListModel.DataCheck = false;
-                                Get.offAllNamed('${Home.routeName}/${BuddListModel.BuddListNum!+1}');
-                                Get.defaultDialog(
-                                  title: '新しい仏壇を追加しました',
-                                  middleText: '',
-                                  textCancel: '戻る',
-                                );
-                              }else{
-                                Get.defaultDialog(
-                                  title: '仏壇が存在しません',
-                                  middleText: '',
-                                  textCancel: '戻る',
-                                );
+                            bool check = false;
+
+                            for(int i = 0; i < budd!.length; i++){
+                              if(budd!.elementAt(i).buddId == _shareCode){
+                                check = true;
                               }
-                            });
+                            }
+                            if(check){
+                              Get.defaultDialog(
+                                title: '既に登録されている仏壇です',
+                                middleText: '',
+                                textCancel: '戻る',
+                              );
+                            }else {
+                              await BuddDb().checkIsUsed(_shareCode).then((value) async {
+                                if (value == true) {
+                                  UsersDb().setBuddId(_shareCode!);
+                                  await Future<void>.delayed(const Duration(milliseconds: 500));
+                                  BuddListModel.DataCheck = false;
+                                  Get.offAllNamed(
+                                      '${Home.routeName}/${BuddListModel.BuddListNum! + 1}');
+                                  Get.defaultDialog(
+                                    title: '新しい仏壇を追加しました',
+                                    middleText: '',
+                                    textCancel: '戻る',
+                                  );
+                                } else {
+                                  Get.defaultDialog(
+                                    title: '仏壇が存在しません',
+                                    middleText: '',
+                                    textCancel: '戻る',
+                                  );
+                                }
+                              });
+                            }
 
                             //キーボードを閉じる
                             FocusScope.of(context).requestFocus(FocusNode());

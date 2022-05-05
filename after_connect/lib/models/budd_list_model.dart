@@ -22,6 +22,7 @@ class BuddListModel extends ChangeNotifier {
 
 
   BuddListModel(){
+    debugPrint('再読み込みするか否か→$DataCheck');
     checkBuddMade().then((value) {
       if(value){
         UsersDb().getBuddsList(user!.email).then((value){

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
+import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
+import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,10 +64,13 @@ class _HomeState extends State<Home> {
               onPressed: () async{
                 debugPrint('Homeにてメニューボタンが押されました');
                 //BuddDb().makeBudd();
-                String? _imgUrl = '初期状態だよ';
-                _imgUrl = await ImageDb().imgDownloadPath('default/budd/budd_photo.png');
-                debugPrint(_imgUrl);
+                //String? _imgUrl = '初期状態だよ';
+                //_imgUrl = await ImageDb().imgDownloadPath('default/budd/budd_photo.png');
+                //debugPrint(_imgUrl);
                 //debugPrint(BuddListModel());
+
+
+
                 Get.toNamed(Menu.routeName)!.then((value) {
                   user = FirebaseAuth.instance.currentUser;
                 });
@@ -77,7 +82,10 @@ class _HomeState extends State<Home> {
               IconButton(
                 onPressed: () {
                   debugPrint('Homeにて共有ボタンが押されました');
-                  Get.toNamed(Top.routeName);
+                  ShareCodeDialogPage shareCode = ShareCodeDialogPage(context);
+                  shareCode.setHomeNum(_homeNum);
+                  shareCode.showCustomDialog();
+                  //Get.toNamed(Top.routeName);
                 },
                 icon: const Icon(Icons.ios_share),
               ),
@@ -270,7 +278,7 @@ class _HomeState extends State<Home> {
                           ),
                           onPressed: () {
                             if(_homeNum >= budd.length){
-
+                              MakeHomeDialogPage(context).showCustomDialog();
                             }else{
                               _rightPage();
                             }

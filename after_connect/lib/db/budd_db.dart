@@ -37,6 +37,7 @@ class BuddDb{
     }
 
     await docRef.set({
+      'isUsed': false,
       'buddName': '故人のお名前',
       'buddPhoto': 'https://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
     });
@@ -66,6 +67,14 @@ class BuddDb{
 
     if(docSnapshot.exists){
       return docSnapshot['buddPhoto'];
+    }
+  }
+
+  Future<bool?> checkIsUsed(String? buddId) async{
+    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentSnapshot docSnapshot = await docRef.get();
+    if(docSnapshot.exists){
+      return docSnapshot['isUsed'];
     }
   }
 

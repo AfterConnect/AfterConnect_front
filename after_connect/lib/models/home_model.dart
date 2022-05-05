@@ -41,6 +41,7 @@ class HomeModel {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
           final String buddId = data[buddNum];
           this.buddId = buddId;
+          buddIsUsed(buddId);
           return buddId;
         }).toString();
         debugPrint('テスト：buddIdの値→$buddId');
@@ -70,60 +71,14 @@ class HomeModel {
     }
   }
 
-
-
-
-  /*String? buddId = "テスト";
-  String buddName = "";
-  String? buddPhoto;
-  List? buddsList;
-
-  HomeModel(int buddNum){
-    //buddId = UsersDb().getBuddId(user!.email, buddNum - 1);
-
-    /*UsersDb().getBuddId(user!.email, buddNum - 1).then((value){
-      if(value != null) buddId = value;
-    });
-    Timer(const Duration(milliseconds: 10),nullmethod);
-    //await Future<void>.delayed(Duration(seconds: 1));
-    debugPrint('ユーザId：${user!.email}');
-    debugPrint('buddIdに入れたい値：${UsersDb().getBuddId(user!.email, buddNum - 1)}');
-    debugPrint('buddIdの中身：$buddId');*/
-
-    setValue(buddNum);
-
+  void buddIsUsed(String buddId)async{
+    final docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    await docRef.set({
+      'isUsed': true,
+    },
+      SetOptions(merge: true),
+    );
   }
-
-  Future<void> setValue(int buddNum) async{
-    /*await UsersDb().getBuddId(user!.email, buddNum - 1).then((value){
-      if(value != null) buddId = value;
-    });*/
-
-    buddId = await UsersDb().getBuddId(user!.email, buddNum - 1);
-
-    Timer(const Duration(milliseconds: 10),nullmethod);
-    //await Future<void>.delayed(Duration(seconds: 1));
-    debugPrint('ユーザId：${user!.email}');
-    debugPrint('buddIdに入れたい値：${UsersDb().getBuddId(user!.email, buddNum - 1)}');
-    debugPrint('buddIdの中身：$buddId');
-  }
-
-
-
-
-
-  void nullmethod(){
-    debugPrint("止まったはず");
-    BuddDb().getBuddName(buddId).then((value) {
-      if(value != null) {
-        buddName = value;
-      }
-    });
-    BuddDb().getBuddPhoto(buddId).then((value) => buddPhoto = value);
-    debugPrint('buddIdの中身：$buddId');
-  }*/
-
-
 
 
 }

@@ -1,3 +1,4 @@
+import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/unknown_route_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,6 +47,10 @@ void main() async {
               name: Home.routeName + '/:homeNum',
               page: () => const Home(),
           ),
+            GetPage(
+              name: Home.routeName + '/:homeNum' + HomeEditPage.routeName,
+              page: () => const HomeEditPage(),
+            ),
 
           GetPage(name: UserConfPage.routeName, page: () => const UserConfPage()),
 

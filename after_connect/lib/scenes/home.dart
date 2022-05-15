@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
+import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,8 +22,6 @@ import '../models/budd_list_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
-  //static final _homeNum = int.parse(Get.parameters['homeNum']!);
-  //static final _buddId = UsersDb().getBuddId(user!.email, _homeNum - 1);
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -42,21 +41,16 @@ class _HomeState extends State<Home> {
       _homeNum++;
     });
   }
-  void rePage(){
-    setState((){
-
-    });
+  void _rePage(){
   }
 
   @override
   Widget build(BuildContext context){
 
-    int _checkNum = 0;
-
 
     return MaterialApp(
       home: ChangeNotifierProvider<BuddListModel>(
-        //画面が作成されたタイミングで HomeModel が発火
+        //画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
         create: (_) => BuddListModel()..fetchBuddList(),
         child: Scaffold(
           appBar: AppBar(
@@ -70,9 +64,12 @@ class _HomeState extends State<Home> {
                 //debugPrint(_imgUrl);
                 //debugPrint(BuddListModel());
 
+                Menu menu = const Menu();
+                menu.setBudd(budd!);
 
-
-                Get.toNamed(Menu.routeName)!.then((value) {
+                ///メニュー画面にてユーザー名の変更をされている可能性があるので
+                ///帰ってきたら更新されるようにしてる
+                Get.to(menu)!.then((value) {
                   user = FirebaseAuth.instance.currentUser;
                 });
               },
@@ -80,6 +77,15 @@ class _HomeState extends State<Home> {
             ),
 
             actions: [
+              IconButton(
+                onPressed: (){
+                  /// TODO:編集画面を作る
+                  /// TODO:編集時のあれこれメソッドを別のクラスに作る
+                  const HomeEditPage().setBudd(budd!);
+                  Get.toNamed('${Home.routeName}/$_homeNum${HomeEditPage.routeName}');
+                },
+                icon: const Icon(Icons.edit)
+              ),
               IconButton(
                 onPressed: () {
                   debugPrint('Homeにて共有ボタンが押されました');
@@ -144,113 +150,176 @@ class _HomeState extends State<Home> {
                 ),
               );
             }else {
-              return Stack(
+              return RefreshIndicator(
+                onRefresh:()async{
+                  Get.offAllNamed('${Home.routeName}/$_homeNum');
+                },
+                child: Stack(
 
-                children: <Widget>[
-                  Center(
-                    //child: SizedBox(
-                      child: Image.network(
-                          'https://cdn.discordapp.com/attachments/944112736705585222/966699651229155378/2E1193B7-6FDF-49C1-B82B-C417D0BE679C.jpg'),
-                    //),
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          budd!.elementAt(_homeNum-1).buddName,
-                          style: const TextStyle(
-                              backgroundColor: Colors.black12,
-                              fontSize: 40.0
-                          ),
+                  children: <Widget>[
+                    Center(
+                      //child: SizedBox(
+                        child: Image.network(
+                            'http://cdn.discordapp.com/attachments/944112736705585222/966699651229155378/2E1193B7-6FDF-49C1-B82B-C417D0BE679C.jpg'
                         ),
-                      ],
                     ),
-                  ),
-
-                  Flexible(
-                    flex: 2,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
-                                  ),
-                                ),
-                                onTap: () async {
-                                  debugPrint('反応した！');
-                                  ImageDb().imgUpload(
-                                      'budds/test$_homeNum/budd_photo.png');
-                                },
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white70,
+                              //border: Border.all(color: Colors.black),
+                            ),
+                            child: Text(
+                              '${budd!.elementAt(_homeNum-1).buddName}',
+                              style: const TextStyle(
+                                //backgroundColor: Colors.black12,
+                                fontSize: 40.0,
+                                locale: Locale("ja", "JP"),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              (() {
-                                if (user != null) {
-                                  debugPrint(user?.displayName);
-                                  return Text(
-                                    'ログインユーザー名：${user?.displayName}',
-                                    style: const TextStyle(
-                                        fontSize: 20.0
-                                    ),
-                                  );
-                                } else {
-                                  return const Text(
-                                    'ログインしていません',
-                                    style: TextStyle(
-                                        fontSize: 20.0
-                                    ),
-                                  );
-                                }
-                              })(),
-                            ],
-                          ),
-                        ),
+                        ],
+                      ),
+                    ),
 
+                    Column(
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Stack(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Row(
+                                      children: [
+                                        ///_homeNumが1以上の時のみ表示
+                                        Visibility(
+                                          visible: (_homeNum > 1),
+                                          child: IconButton(
+                                            onPressed: (){
+                                              debugPrint('左の仏壇を押したよ');
+                                              _leftPage();
+                                            },
+                                            icon: const Icon(Icons.arrow_left),
+                                            color: Colors.red,
+                                            iconSize: 100,
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: (_homeNum <= 1),
+                                          child: const IconButton(
+                                            onPressed: null,
+                                            icon: Icon(Icons.arrow_left),
+                                            //color: Colors.white.withOpacity(0.0),
+                                            iconSize: 100,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          child: Center(
+                                            child: SizedBox(
+                                              width: 100,
+                                              height: 100,
+                                              child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
+                                            ),
+                                          ),
+                                          onTap: () async {
+                                            debugPrint('反応した！');
+                                            //ImageDb().imgUpload('budds/test$_homeNum/budd_photo.png');
+                                          },
+                                        ),
+                                        IconButton(
+                                          onPressed: (){
+                                            debugPrint('右の仏壇を押したよ');
+                                            if(_homeNum >= budd!.length){
+                                              MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
+                                              makeHome.setBudd(budd!);
+                                              makeHome.showCustomDialog();
+                                            }else{
+                                              _rightPage();
+                                            }
+                                          },
+                                          icon: const Icon(Icons.arrow_right),
+                                          color: Colors.red,
+                                          iconSize: 100,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    (() {
+                                      if (user != null) {
+                                        debugPrint(user?.displayName);
+                                        return Text(
+                                          'ログインユーザー名：${user?.displayName}',
+                                          style: const TextStyle(
+                                              fontSize: 20.0
+                                          ),
+                                        );
+                                      } else {
+                                        return const Text(
+                                          'ログインしていません',
+                                          style: TextStyle(
+                                              fontSize: 20.0
+                                          ),
+                                        );
+                                      }
+                                    })(),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 50.0,
-                      horizontal: 50.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 50.0,
+                        horizontal: 50.0,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
 
-                        ///_homeNumが1以上の時のみ表示
-                        Visibility(
-                          visible: (_homeNum > 1),
-                          child: OutlinedButton(
+
+
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+
+                          /*OutlinedButton(
                             style: OutlinedButton.styleFrom(
-
                               side: const BorderSide(
                                   width: 1.0, color: Colors.black),
-                              primary: Colors.white,
+                              // primary: Colors.white,
                               backgroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(10),
                             ),
-
                             onPressed: () {
-                              debugPrint('左の仏壇を押したよ');
-                              //ルーティングで画面遷移管理
-                              //Get.toNamed(Home.routeName + '/${_homeNum - 1}');
-                              _leftPage();
-
+                              if(_homeNum >= budd!.length){
+                                MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
+                                makeHome.setBudd(budd!);
+                                makeHome.showCustomDialog();
+                              }else{
+                                _rightPage();
+                              }
                             },
 
                             child: Container(
@@ -259,7 +328,39 @@ class _HomeState extends State<Home> {
                                 horizontal: 10.0,
                               ),
                               child: Text(
-                                '左の仏壇へ',
+                                '右の仏壇へ',
+                                style: TextStyle(
+                                  color: Colors.grey[900],
+                                  fontSize: 24.0,
+                                ),
+                              ),
+                            ),
+                          ),*/
+
+                          const SizedBox(
+                            height: 10.0,
+                          ),
+
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              // primary: Colors.white,
+                              backgroundColor: Colors.white,
+                              minimumSize: const Size.fromHeight(10),
+                            ),
+                            onPressed: () {
+                              //ルーティングで画面遷移管理
+                              //Navigator.pushNamed(context, HogeHoge.routeName);
+                              BuddListModel.DataCheck = false;
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 10.0,
+                              ),
+                              child: Text(
+                                'お供え',
                                 style: TextStyle(
                                   color: Colors.grey[900],
                                   fontSize: 24.0,
@@ -267,80 +368,11 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           ),
-                        ),
-
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                width: 1.0, color: Colors.black),
-                            // primary: Colors.white,
-                            backgroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(10),
-                          ),
-                          onPressed: () {
-                            if(_homeNum >= budd!.length){
-                              MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
-                              makeHome.setBudd(budd!);
-                              makeHome.showCustomDialog();
-                            }else{
-                              _rightPage();
-                            }
-                          },
-
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: 10.0,
-                            ),
-                            child: Text(
-                              '右の仏壇へ',
-                              style: TextStyle(
-                                color: Colors.grey[900],
-                                fontSize: 24.0,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 10.0,
-                        ),
-
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                                width: 1.0, color: Colors.black),
-                            // primary: Colors.white,
-                            backgroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(10),
-                          ),
-                          onPressed: () {
-                            //ルーティングで画面遷移管理
-                            //Navigator.pushNamed(context, HogeHoge.routeName);
-                            BuddListModel.DataCheck = false;
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: 10.0,
-                            ),
-                            child: Text(
-                              'お供え',
-                              style: TextStyle(
-                                color: Colors.grey[900],
-                                fontSize: 24.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }
           },

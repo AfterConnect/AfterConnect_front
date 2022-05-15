@@ -44,6 +44,7 @@ class UsersDb {
     }
   }
 
+
   ///ユーザーが保有している仏壇IDのゲッター
   ///仏壇Idのリストが返される
   Future<List?> getBuddsList(String? userId)async{
@@ -60,15 +61,7 @@ class UsersDb {
         IDlist.add(IDSnapshot['$i']);
         //debugPrint('${IDSnapshot['$i']} をIDリストに入れたよ');
       }
-    }/*else if(user != null){
-      for(int i = 0; i < 2 ; i++){
-        debugPrint('$i回目の仏壇作成！');
-        //BuddDb().makeBudd();
-        await Future<void>.delayed(const Duration(milliseconds: 3000));
-      }
-      await Future<void>.delayed(const Duration(milliseconds: 30000));
-      return getBuddsList(userId);
-    }*/
+    }
     IDlist.forEach((element) {debugPrint(element); });
     return IDlist;
   }

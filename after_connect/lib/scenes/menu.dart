@@ -3,17 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../db/budd_db.dart';
+import '../domain/budd.dart';
+import 'add_home_dialog_page.dart';
 import 'home.dart';
 import 'top.dart';
 import '../util/authentication.dart';
 import '../models/budd_list_model.dart';
 
-class Menu extends StatelessWidget {
+class Menu extends StatefulWidget{
   static const routeName = '/menu';
   const Menu({Key? key}) : super(key: key);
+  static List<Budd>? _budd;
+  void setBudd(List<Budd> budd){
+    _budd = budd;
+    debugPrint('buddは→$budd');
+  }
+  @override
+  State<Menu> createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -140,8 +154,10 @@ class Menu extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
-                    //ルーティングで画面遷移管理
-                    //Get.toNamed(HogeHoge.routeName);
+                    debugPrint('_buddは→${Menu._budd}');
+                    AddHomeDialogPage addHome = AddHomeDialogPage(context);
+                    addHome.setBudd(Menu._budd!);
+                    addHome.showCustomDialog();
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

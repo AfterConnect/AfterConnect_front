@@ -48,7 +48,6 @@ class HomeModel {
 
       });
     }
-    //notifyListeners();
   }
 
 
@@ -66,7 +65,6 @@ class HomeModel {
         debugPrint('テスト：buddPhotoの値→$buddPhoto');
         budd = Budd(buddId, buddName, buddPhoto);
         BuddListModel.DataCheck = false;
-        //notifyListeners();
       });
     }
   }

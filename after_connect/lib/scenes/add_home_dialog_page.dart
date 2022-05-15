@@ -88,7 +88,14 @@ class AddHomeDialogPage {
                       SizedBox(
                         width: 250,
                         child: Container(
-                          //color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2.0,
+                            ),
+                          ),
                           child: TextFormField(
                             //cursorColor: Colors.white,
                             decoration: InputDecoration(
@@ -97,14 +104,14 @@ class AddHomeDialogPage {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(
-                                  color: Colors.black12,
+                                  color: Colors.white,
                                   width: 2.0,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(
-                                  color: Colors.black12,
+                                  color: Colors.white,
                                   width: 1.0,
                                 ),
                               ),

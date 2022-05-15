@@ -1,5 +1,6 @@
 import 'package:after_connect_v2/domain/budd.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../db/budd_db.dart';
 import '../db/users_db.dart';
@@ -72,20 +73,36 @@ class ShareCodeDialogPage {
                                   /*
                                  * メッセージ
                                  */
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.black12,
-                                      border: Border.all(color: Colors.black),
-                                    ),
-                                    child: Text(
-                                      "  ${BuddListModel.BuddList!.elementAt(_homeNum!-1).buddId}  ",
-                                      style: const TextStyle(
-                                        //backgroundColor: Colors.black12,
-                                        fontSize: 25.0,
-                                        locale: Locale("ja", "JP"),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 50,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.black12,
+                                          border: Border.all(color: Colors.black),
+                                        ),
+                                        child: Text(
+                                          "  ${BuddListModel.BuddList!.elementAt(_homeNum!-1).buddId}  ",
+                                          style: const TextStyle(
+                                            //backgroundColor: Colors.black12,
+                                            fontSize: 25.0,
+                                            locale: Locale("ja", "JP"),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      IconButton(
+                                          onPressed:()async{
+                                            /// コピーするとき
+                                            final data = ClipboardData(text: '${BuddListModel.BuddList!.elementAt(_homeNum!-1).buddId}');
+                                            await Clipboard.setData(data);
+                                          },
+                                          icon: const Icon(Icons.content_copy),
+                                      ),
+                                    ],
                                   ),
                                   const Text(
                                     "    ",
@@ -108,8 +125,6 @@ class ShareCodeDialogPage {
                                       locale: Locale("ja", "JP"),
                                     ),
                                   ),
-
-
                                 ],
                               ),
                             ),
@@ -124,6 +139,14 @@ class ShareCodeDialogPage {
                       SizedBox(
                         width: 250,
                         child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2.0,
+                            ),
+                          ),
                           child: TextFormField(
                             //cursorColor: Colors.white,
                             decoration: InputDecoration(
@@ -132,14 +155,14 @@ class ShareCodeDialogPage {
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(
-                                  color: Colors.black12,
+                                  color: Colors.white,
                                   width: 2.0,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: const BorderSide(
-                                  color: Colors.black12,
+                                  color: Colors.white,
                                   width: 1.0,
                                 ),
                               ),

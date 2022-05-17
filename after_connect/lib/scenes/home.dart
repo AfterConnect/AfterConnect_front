@@ -78,6 +78,12 @@ class _HomeState extends State<Home> {
 
             actions: [
               IconButton(
+                  onPressed: (){
+                    Get.toNamed('${Home.routeName}/$_homeNum}');
+                  },
+                  icon: const Icon(Icons.refresh)
+              ),
+              IconButton(
                 onPressed: (){
                   /// TODO:編集画面を作る
                   /// TODO:編集時のあれこれメソッドを別のクラスに作る
@@ -159,8 +165,11 @@ class _HomeState extends State<Home> {
                   children: <Widget>[
                     Center(
                       //child: SizedBox(
-                        child: Image.network(
-                            'http://cdn.discordapp.com/attachments/944112736705585222/966699651229155378/2E1193B7-6FDF-49C1-B82B-C417D0BE679C.jpg'
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: Image.network(
+                              'http://cdn.discordapp.com/attachments/944112736705585222/966699651229155378/2E1193B7-6FDF-49C1-B82B-C417D0BE679C.jpg'
+                          ),
                         ),
                     ),
                     Center(
@@ -224,18 +233,25 @@ class _HomeState extends State<Home> {
                                             iconSize: 100,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          child: Center(
-                                            child: SizedBox(
-                                              width: 100,
-                                              height: 100,
-                                              child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
-                                            ),
+                                        Container(
+                                          height: 140,
+                                          width: 140,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black26,
                                           ),
-                                          onTap: () async {
-                                            debugPrint('反応した！');
-                                            //ImageDb().imgUpload('budds/test$_homeNum/budd_photo.png');
-                                          },
+                                          child: GestureDetector(
+                                            child: Center(
+                                              child: SizedBox(
+                                                width: 140,
+                                                height: 140,
+                                                child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
+                                              ),
+                                            ),
+                                            onTap: () async {
+                                              debugPrint('反応した！');
+                                              //ImageDb().imgUpload('budds/test$_homeNum/budd_photo.png');
+                                            },
+                                          ),
                                         ),
                                         IconButton(
                                           onPressed: (){

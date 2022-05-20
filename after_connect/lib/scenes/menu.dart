@@ -1,3 +1,4 @@
+import 'package:after_connect_v2/scenes/form_view_page.dart';
 import 'package:after_connect_v2/scenes/user_conf_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -208,7 +209,7 @@ class _MenuState extends State<Menu> {
                   height: 10.0,
                 ),
 
-                ///ログアウト
+                ///お問い合わせ
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
@@ -217,8 +218,35 @@ class _MenuState extends State<Menu> {
                   ),
                   onPressed: (){
                     //ルーティングで画面遷移管理
-                    //Get.toNamed(HogeHoge.routeName);
+                    Get.toNamed(FormViewPage.routeName);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 10.0,
+                    ),
+                    child:Text(
+                      'お問い合わせ',
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ),
+                ),
 
+                const SizedBox(
+                  height: 10.0,
+                ),
+
+                ///ログアウト
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(width: 1.0, color: Colors.black),
+                    // primary: Colors.white,
+                    minimumSize: const Size.fromHeight(10),
+                  ),
+                  onPressed: (){
                     Get.defaultDialog(
                       title: 'ログアウトしますか？',
                       middleText: 'この操作は取り消せません',

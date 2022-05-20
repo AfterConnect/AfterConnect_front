@@ -2,16 +2,32 @@ import 'package:after_connect_v2/scenes/user_conf_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../db/budd_db.dart';
+import '../domain/budd.dart';
+import 'add_home_dialog_page.dart';
 import 'home.dart';
 import 'top.dart';
 import '../util/authentication.dart';
+import '../models/budd_list_model.dart';
 
-class Menu extends StatelessWidget {
+class Menu extends StatefulWidget{
   static const routeName = '/menu';
   const Menu({Key? key}) : super(key: key);
+  static List<Budd>? _budd;
+  void setBudd(List<Budd> budd){
+    _budd = budd;
+    debugPrint('buddは→$budd');
+  }
+  @override
+  State<Menu> createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -47,6 +63,7 @@ class Menu extends StatelessWidget {
                   ),
                   onPressed: (){
                     //ルーティングで画面遷移管理
+                    //BuddListModel.DataCheck = true;
                     Get.toNamed(Home.routeName + '/1');
                   },
                   child: Container(
@@ -76,6 +93,7 @@ class Menu extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
+                    //BuddDb().makeBudd();
                     //ルーティングで画面遷移管理
                     //Get.toNamed(HogeHoge.routeName);
                   },
@@ -136,8 +154,10 @@ class Menu extends StatelessWidget {
                     minimumSize: const Size.fromHeight(10),
                   ),
                   onPressed: (){
-                    //ルーティングで画面遷移管理
-                    //Get.toNamed(HogeHoge.routeName);
+                    debugPrint('_buddは→${Menu._budd}');
+                    AddHomeDialogPage addHome = AddHomeDialogPage(context);
+                    addHome.setBudd(Menu._budd!);
+                    addHome.showCustomDialog();
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -203,6 +223,8 @@ class Menu extends StatelessWidget {
                       title: 'ログアウトしますか？',
                       middleText: 'この操作は取り消せません',
                       onConfirm: (){
+                        BuddListModel.DataCheck = false;
+                        BuddListModel.BuddListNum = null;
                         Authentication.signOut(context: context);
                         Get.offAllNamed(Top.routeName);
                         debugPrint('ログアウトします');

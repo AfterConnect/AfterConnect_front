@@ -9,12 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
 import '../main.dart';
 import '../util/authentication.dart';
-
+import '../db/budd_db.dart';
 
 
 class LoginPage extends StatelessWidget{
   static const routeName = '/login';
   const LoginPage({Key? key}) : super(key: key);
+
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
 
@@ -46,6 +47,7 @@ class LoginPage extends StatelessWidget{
 
       if (user != null && user!.emailVerified) {
         debugPrint('メール認証成功');
+        await Future<void>.delayed(const Duration(milliseconds: 30));
         return null;
       }else if(user != null){
         Get.defaultDialog(
@@ -397,9 +399,8 @@ class LoginPage extends StatelessWidget{
         },
 
         /// ログイン成功時の画面遷移
-        onSubmitAnimationCompleted: () {
+        onSubmitAnimationCompleted: (){
           //ルーティングで画面遷移管理
-          //'1'の所を仏壇IDにしても良いかも
           Get.toNamed(Home.routeName + '/1');
         },
 

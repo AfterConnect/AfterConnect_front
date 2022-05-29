@@ -15,6 +15,7 @@ import 'scenes/menu.dart';
 import 'scenes/user_conf_page.dart';
 import 'scenes/user_name_change_page.dart';
 import 'util/authentication.dart';
+import 'scenes/form_view_page.dart';
 
 
 User? user;
@@ -62,6 +63,7 @@ void main() async {
 
           GetPage(name: Menu.routeName, page: () => const Menu()),
 
+          GetPage(name: FormViewPage.routeName, page: () => FormViewPage()),
 
         ],
 

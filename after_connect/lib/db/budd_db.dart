@@ -22,6 +22,8 @@ class BuddDb{
     return new String.fromCharCodes(codeUnits);
   }
 
+
+
   ///仏壇の初期設定
   void makeBudd() async{
     String buddId = randomID(10);
@@ -38,6 +40,7 @@ class BuddDb{
     }
 
     await docRef.set({
+      'userIds':[],
       'isUsed': false,
       'buddName': '故人のお名前',
       'buddPhoto': 'http://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',

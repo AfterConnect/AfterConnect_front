@@ -19,6 +19,7 @@ class BuddListModel extends ChangeNotifier {
   static int? BuddListNum;
   HomeModel? _homeModel;
   DocumentSnapshot? docSnapshot;
+  QuerySnapshot? querySnapshot;
 
 
   BuddListModel(){
@@ -36,7 +37,8 @@ class BuddListModel extends ChangeNotifier {
   ///仏壇データが存在するかを確認
   ///なければ(ユーザー登録直後なら)2つ仏壇を作る
   Future<bool> checkBuddMade()async{
-    docSnapshot = await FirebaseFirestore.instance.doc('users/${user!.email}').get();
+    querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: '${user!.email}').get();
+    docSnapshot = querySnapshot!.docs as DocumentSnapshot<Object?>?;
     if(docSnapshot!.exists){
       return true;
     }else{

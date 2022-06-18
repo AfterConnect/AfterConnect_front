@@ -1,9 +1,30 @@
+import 'dart:math';
+
 import 'package:after_connect_v2/db/budd_db.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
 
 class UsersDb {
+
+
+  int randomID(int length) {
+
+    var rand = new Random();
+    var next = rand.nextDouble();
+    var check = 1;
+    for(int i = 0; i < length; i++) {
+      check *= 10;
+    }
+    next *= check;
+
+    while (next < check) {
+      next *= 10;
+    }
+
+    return next.toInt();
+  }
+
 
   void setBuddId(String buddId) async{
     int _num = 0;

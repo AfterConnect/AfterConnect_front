@@ -20,6 +20,7 @@ class BuddListModel extends ChangeNotifier {
   HomeModel? _homeModel;
   DocumentSnapshot? docSnapshot;
   QuerySnapshot? querySnapshot;
+  final _db = FirebaseFirestore.instance;
 
 
   BuddListModel(){
@@ -37,18 +38,36 @@ class BuddListModel extends ChangeNotifier {
   ///仏壇データが存在するかを確認
   ///なければ(ユーザー登録直後なら)2つ仏壇を作る
   Future<bool> checkBuddMade()async{
-    querySnapshot = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: '${user!.email}').get();
-    docSnapshot = querySnapshot!.docs as DocumentSnapshot<Object?>?;
-    if(docSnapshot!.exists){
-      return true;
-    }else{
-      for(int i = 0; i < 2 ; i++){
+    int _userId = 0;
+    await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
+            (snapshot) => {
+          snapshot.docs.forEach((element) {
+            _userId = int.parse(element.reference.id);
+          }),
+        }
+    );
+
+    querySnapshot = await FirebaseFirestore.instance.collection('budds').where('userIds', arrayContains: _userId).get();
+
+    querySnapshot!.docs.forEach((element) {
+      docSnapshot = element;
+    });
+
+    if(docSnapshot != null && docSnapshot!.exists){
+        return true;
+    }else {
+      UsersDb().makeUserDb();
+      for (int i = 0; i < 2; i++) {
         debugPrint('$i回目の仏壇作成！');
         BuddDb().makeBudd();
         await Future<void>.delayed(const Duration(milliseconds: 1000));
       }
       return true;
     }
+  }
+
+  void fetchBuddDoc()async{
+
   }
 
   void fetchBuddList()async{

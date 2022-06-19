@@ -8,12 +8,13 @@ import '../main.dart';
 class UsersDb {
 
 
+  ///引数で与えられた桁数のランダムな整数を返す
   int randomID(int length) {
 
     var rand = new Random();
     var next = rand.nextDouble();
     var check = 1;
-    for(int i = 0; i < length; i++) {
+    for(int i = 0; i < length-1; i++) {
       check *= 10;
     }
     next *= check;
@@ -23,6 +24,30 @@ class UsersDb {
     }
 
     return next.toInt();
+  }
+
+  ///ユーザデータベースを構築
+  ///usersコレクションに登録する
+  void makeUserDb() async{
+    ///10桁のランダム整数を生成
+    int _userId = randomID(10);
+    final _db = FirebaseFirestore.instance;
+
+    DocumentReference docRef = _db.doc('users/$_userId');
+    DocumentSnapshot docSnapshot = await docRef.get();
+    while (docSnapshot.exists) { ///ユーザIDに被りが無いようにする
+      debugPrint('失敗した仏壇ID：$_userId');
+      debugPrint('仏壇IDを再設定');
+      _userId = randomID(10);
+      docRef = _db.doc('users/$_userId');
+      docSnapshot = await docRef.get();
+    }
+
+    await docRef.set({
+      'email': user!.email,
+      'isUsed':false,
+    });
+
   }
 
 
@@ -99,6 +124,8 @@ class UsersDb {
       }
     });
   }
+
+
 
 
 }

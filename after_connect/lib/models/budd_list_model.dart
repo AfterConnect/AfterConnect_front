@@ -15,12 +15,13 @@ class BuddListModel extends ChangeNotifier {
   Stream<QuerySnapshot>? _usersStream;
   Stream<DocumentSnapshot>? _buddsStream;
   List<String>? BuddIdList;
-  static List<Budd>? BuddList = <Budd>[];
+  static List<Budd> BuddList = <Budd>[];
   static int? BuddListNum;
   HomeModel? _homeModel;
   DocumentSnapshot? docSnapshot;
   QuerySnapshot? querySnapshot;
   final _db = FirebaseFirestore.instance;
+  static int userId = 0;
 
 
   BuddListModel(){
@@ -38,16 +39,16 @@ class BuddListModel extends ChangeNotifier {
   ///仏壇データが存在するかを確認
   ///なければ(ユーザー登録直後なら)2つ仏壇を作る
   Future<bool> checkBuddMade()async{
-    int _userId = 0;
-    await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
+
+    /*await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
             (snapshot) => {
           snapshot.docs.forEach((element) {
-            _userId = int.parse(element.reference.id);
+            userId = int.parse(element.reference.id);
           }),
         }
-    );
+    );*/
 
-    querySnapshot = await FirebaseFirestore.instance.collection('budds').where('userIds', arrayContains: _userId).get();
+    querySnapshot = await _db.collection('budds').where('userIds', arrayContains: user!.email).get();
 
     querySnapshot!.docs.forEach((element) {
       docSnapshot = element;
@@ -70,6 +71,10 @@ class BuddListModel extends ChangeNotifier {
 
   }
 
+  void fetchBudds()async{
+
+  }
+
   void fetchBuddList()async{
     if(!DataCheck) {
       BuddListModel();
@@ -79,10 +84,10 @@ class BuddListModel extends ChangeNotifier {
 
       if (BuddListNum != null) debugPrint('BuddListModel()終わったよ！');
       fetchBuddIdList();
-      while (BuddList!.length < BuddListNum!) {
+      while (BuddList.length < BuddListNum!) {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }
-      debugPrint('0番目の名前は：${BuddList!.elementAt(0).buddName}');
+      debugPrint('0番目の名前は：${BuddList.elementAt(0).buddName}');
       DataCheck = true;
     }
     notifyListeners();
@@ -107,7 +112,7 @@ class BuddListModel extends ChangeNotifier {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }
       debugPrint('${_homeModel!.getBudd()!}');
-      BuddList!.add(_homeModel!.getBudd()!);
+      BuddList.add(_homeModel!.getBudd()!);
     }
   }
 }

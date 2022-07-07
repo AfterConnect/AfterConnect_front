@@ -14,12 +14,18 @@ class HomeModel {
   Stream<DocumentSnapshot>? _buddsStream;
   String? buddId;
   Budd? budd;
+  final _db = FirebaseFirestore.instance;
 
 
   HomeModel(int homeId){
+
     _buddsNum = (homeId - 1).toString();
-    _usersStream =
-        FirebaseFirestore.instance.collection('users/${user!.email}/buddsList').snapshots();
+    //_usersStream =
+    //    _db.collection('users/${user!.email}/buddsList').snapshots();
+
+    ///ユーザーID(e-mail)が含まれる仏壇を仏壇ID順に取得
+    _usersStream = _db.collection("budds")
+        .where("userIds", arrayContains: user!.email).snapshots();
     //fetchBuddId(_buddsNum!);
   }
 
@@ -39,6 +45,7 @@ class HomeModel {
       _usersStream!.listen((QuerySnapshot snapshot) {
         final String _buddId = snapshot.docs.map((DocumentSnapshot document){
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          _buddsStream = snapshot.docChanges as Stream<DocumentSnapshot<Object?>>?;
           final String buddId = data[buddNum];
           this.buddId = buddId;
           buddIsUsed(buddId);
@@ -48,12 +55,16 @@ class HomeModel {
 
       });
     }
+    
+    
+    
+    
   }
 
 
   void fetchBuddInfo(){
-    _buddsStream =
-        FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
+    //_buddsStream =
+        //FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
     if(_buddsStream != null){
       _buddsStream!.listen((DocumentSnapshot document) {
@@ -61,16 +72,17 @@ class HomeModel {
         final String buddId = document.id;
         final String buddName = data['buddName'];
         final String buddPhoto = data['buddPhoto'];
+        final Map<String,bool> buddItems = data['items'];
         debugPrint('テスト：buddNameの値→$buddName');
         debugPrint('テスト：buddPhotoの値→$buddPhoto');
-        budd = Budd(buddId, buddName, buddPhoto);
+        budd = Budd(buddId, buddName, buddPhoto,buddItems);
         BuddListModel.DataCheck = false;
       });
     }
   }
 
   void buddIsUsed(String buddId)async{
-    final docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    final docRef = _db.doc('budds/$buddId');
     await docRef.set({
       'isUsed': true,
     },

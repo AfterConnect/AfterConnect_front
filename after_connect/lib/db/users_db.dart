@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
 
 class UsersDb {
-
+  final _db = FirebaseFirestore.instance;
 
   ///引数で与えられた桁数のランダムな整数を返す
   int randomID(int length) {
@@ -28,25 +28,27 @@ class UsersDb {
 
   ///ユーザデータベースを構築
   ///usersコレクションに登録する
-  void makeUserDb() async{
+  Future<int> makeUserDb() async{
     ///10桁のランダム整数を生成
     int _userId = randomID(10);
-    final _db = FirebaseFirestore.instance;
 
     DocumentReference docRef = _db.doc('users/$_userId');
     DocumentSnapshot docSnapshot = await docRef.get();
     while (docSnapshot.exists) { ///ユーザIDに被りが無いようにする
-      debugPrint('失敗した仏壇ID：$_userId');
-      debugPrint('仏壇IDを再設定');
+      debugPrint('失敗したユーザID：$_userId');
+      debugPrint('ユーザIDを再設定');
       _userId = randomID(10);
       docRef = _db.doc('users/$_userId');
       docSnapshot = await docRef.get();
     }
 
     await docRef.set({
+      'userId':_userId,
       'email': user!.email,
       'isUsed':false,
     });
+
+    return _userId;
 
   }
 
@@ -57,6 +59,7 @@ class UsersDb {
     bool setCheck = true;
     DocumentReference docRef = FirebaseFirestore.instance.doc('users/${user!.email}');
     DocumentSnapshot docSnapshot = await docRef.get();
+
 
     await UsersDb().getBuddsList('${user!.email}').then((value) => _buddList = value);
     for(int i = 0; i < _buddList!.length; i++){
@@ -88,6 +91,18 @@ class UsersDb {
         SetOptions(merge: true),
       );
     }
+  }
+
+  Future<int> getUserId(String userEmail)async{
+    int _userId = 0;
+    /// ユーザメルアドが登録されているドキュメントを持ってくる
+    QuerySnapshot querySnapshot = await _db.collection("users").where("email",isEqualTo: userEmail).where("isUsed",isEqualTo: true).get();
+    DocumentSnapshot? docSnapshot;
+    for(var doc in querySnapshot.docs) {
+      docSnapshot = await doc.reference.get();
+      if(docSnapshot.exists) _userId = docSnapshot["userId"]; /// ユーザIDを取得
+    }
+    return _userId;
   }
 
 

@@ -133,7 +133,7 @@ class _HomeState extends State<Home> {
                 ),
               );
             }
-            if(BuddListModel.BuddList!.length < BuddListModel.BuddListNum!){
+            if(BuddListModel.BuddList.length < BuddListModel.BuddListNum!){
               debugPrint('二つ目のローディング！');
               return Container(
                 color: Colors.black38,

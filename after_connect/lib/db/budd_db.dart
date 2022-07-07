@@ -60,7 +60,7 @@ class BuddDb{
   }
 
 
-  void makeBudd() async{
+  Future<String> makeBudd() async{
     final _db = FirebaseFirestore.instance;
     String buddId = randomID(10);
     DocumentReference docRef = _db.doc('budds/$buddId');
@@ -76,7 +76,7 @@ class BuddDb{
 
     int _userId = 0;
     int _maxUserId = 0;
-    /*await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
+    await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
             (snapshot) => {
               snapshot.docs.forEach((element) {
                 if(element.get('isUsed') == true){
@@ -93,28 +93,26 @@ class BuddDb{
               }
               )
             }
-    );*/
+    );
 
-    /*if(_userId == 0){
+    if(_userId == 0){
       _userId = _maxUserId;
       debugPrint('_userId : $_userId');
       _db.collection('users').doc('$_userId').update(
         {'isUsed':true}
       );
-    }*/
+    }
 
-    /*await _db.collection('users').where('email', isEqualTo: user!.email).get().then(
+    await _db.collection('users').where('email', isEqualTo: user!.email).where('isUsed', isEqualTo: false).get().then(
             (snapshot) => {
           snapshot.docs.forEach((element) {
-            if(element.get('isUsed') == false){
               _db.collection('users').doc(element.reference.id).delete();
-            }
           })
         }
-    );*/
+    );
 
     await docRef.set({
-      'userIds':[user!.email],
+      //'userIds':[user!.email],
       'isUsed': false,
       'buddName': '故人のお名前',
       'buddPhoto': 'http://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
@@ -126,6 +124,8 @@ class BuddDb{
         'kome': false,
       },
     });
+
+    return buddId;
 
   }
 

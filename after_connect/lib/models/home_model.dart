@@ -24,8 +24,9 @@ class HomeModel {
     //    _db.collection('users/${user!.email}/buddsList').snapshots();
 
     ///ユーザーID(e-mail)が含まれる仏壇を仏壇ID順に取得
-    _usersStream = _db.collection("budds")
-        .where("userIds", arrayContains: user!.email).snapshots();
+    //_usersStream = _db.collection("budds")
+    //    .where("userIds", arrayContains: user!.email).snapshots();
+
     //fetchBuddId(_buddsNum!);
   }
 
@@ -34,6 +35,12 @@ class HomeModel {
   }
   Budd? getBudd(){
     return budd;
+  }
+  void setBuddId(String bId){
+    buddId = bId;
+  }
+  void setBudd(Budd _budd){
+    budd = _budd;
   }
   Stream<QuerySnapshot>? getUserStream(){
 
@@ -63,8 +70,8 @@ class HomeModel {
 
 
   void fetchBuddInfo(){
-    //_buddsStream =
-        //FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
+    _buddsStream =
+        FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
     if(_buddsStream != null){
       _buddsStream!.listen((DocumentSnapshot document) {
@@ -72,7 +79,7 @@ class HomeModel {
         final String buddId = document.id;
         final String buddName = data['buddName'];
         final String buddPhoto = data['buddPhoto'];
-        final Map<String,bool> buddItems = data['items'];
+        final Map<String,bool> buddItems = Map<String, bool>.from(data['items']);
         debugPrint('テスト：buddNameの値→$buddName');
         debugPrint('テスト：buddPhotoの値→$buddPhoto');
         budd = Budd(buddId, buddName, buddPhoto,buddItems);

@@ -7,6 +7,8 @@ import 'users_db.dart';
 
 
 class BuddDb{
+  final _db = FirebaseFirestore.instance;
+
   /// length桁のランダムIDを生成する
   /// IDには数字、大文字小文字アルファベットが含まれる
   String randomID(int length) {
@@ -25,43 +27,7 @@ class BuddDb{
   }
 
 
-
-  ///仏壇の初期設定(旧式)
-  void makeBudd_mistake() async{
-    String buddId = randomID(10);
-    DocumentReference docRef = FirebaseFirestore.instance.doc(
-        'budds/$buddId');
-    DocumentSnapshot docSnapshot = await docRef.get();
-
-    while (docSnapshot.exists) {
-      debugPrint('失敗した仏壇ID：$buddId');
-      debugPrint('仏壇IDを再設定');
-      buddId = randomID(10);
-      docRef = FirebaseFirestore.instance.doc('budds/$buddId');
-      docSnapshot = await docRef.get();
-    }
-
-    await docRef.set({
-      'userIds':[],
-      'isUsed': false,
-      'buddName': '故人のお名前',
-      'buddPhoto': 'http://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
-    });
-
-    //docRef = FirebaseFirestore.instance.doc('budds/$buddId/items');
-    await FirebaseFirestore.instance.doc('budds/$buddId/itemsList/items').set({
-      'kou': false,
-      'hana': false,
-      'toumyou': false,
-      'mizu': false,
-      'kome': false,
-    });
-    UsersDb().setBuddId(buddId);
-  }
-
-
   Future<String> makeBudd() async{
-    final _db = FirebaseFirestore.instance;
     String buddId = randomID(10);
     DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
@@ -112,7 +78,6 @@ class BuddDb{
     );
 
     await docRef.set({
-      //'userIds':[user!.email],
       'isUsed': false,
       'buddName': '故人のお名前',
       'buddPhoto': 'http://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
@@ -132,7 +97,7 @@ class BuddDb{
 
   ///故人の写真を変更する
   void setBuddPhoto(String buddId, String newBuddPhoto)async{
-    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
 
     if(docSnapshot.exists){
@@ -148,7 +113,7 @@ class BuddDb{
 
   ///故人の名前を変更する
   void setBuddName(String buddId, String newBuddName)async{
-    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
 
     if(docSnapshot.exists){
@@ -163,7 +128,7 @@ class BuddDb{
   }
 
   Future<String?> getBuddName(String? buddId) async{
-    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
     if(docSnapshot.exists){
       return docSnapshot['buddName'];
@@ -171,7 +136,7 @@ class BuddDb{
   }
 
   Future<String?> getBuddPhoto(String? buddId) async{
-    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
 
     if(docSnapshot.exists){
@@ -180,7 +145,7 @@ class BuddDb{
   }
 
   Future<bool?> checkIsUsed(String? buddId) async{
-    DocumentReference docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();
     if(docSnapshot.exists){
       return docSnapshot['isUsed'];

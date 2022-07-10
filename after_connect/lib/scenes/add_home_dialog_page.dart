@@ -4,6 +4,7 @@ import '../db/budd_db.dart';
 import '../db/users_db.dart';
 import '../domain/budd.dart';
 import '../models/budd_list_model.dart';
+import '../models/user_to_budd_db.dart';
 import 'modal_overlay.dart';
 import 'home.dart';
 
@@ -15,9 +16,13 @@ class AddHomeDialogPage {
   final _formkey = GlobalKey<FormState>();
   String? _shareCode;
   List<Budd>? budd;
+  int? userId;
 
   void setBudd(List<Budd> budd){
     this.budd = budd;
+  }
+  void setUserId(int userId){
+    this.userId = userId;
   }
 
   /*
@@ -163,7 +168,8 @@ class AddHomeDialogPage {
                                 await BuddDb().checkIsUsed(_shareCode).then((
                                     value) async {
                                   if (value == true) {
-                                    UsersDb().setBuddId(_shareCode!);
+                                    UserToBuddDb().connectId(userId!, _shareCode!);
+                                    //UsersDb().setBuddId(_shareCode!);
                                     await Future<void>.delayed(
                                         const Duration(milliseconds: 500));
                                     BuddListModel.DataCheck = false;

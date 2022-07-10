@@ -30,7 +30,6 @@ class BuddListModel extends ChangeNotifier {
     debugPrint('再読み込みするか否か→$DataCheck');
     checkUserId().then((value) {
       if(value){
-        ///ToDo 仏壇IDのリストを取得
         UsersDb().getUserId(user!.email!).then((uId){
           debugPrint("ユーザIDだよ→$uId");
           UserToBuddDb().getBuddIdList(uId).then((bId){
@@ -41,11 +40,6 @@ class BuddListModel extends ChangeNotifier {
             }
           });
         });
-
-        /*UsersDb().getBuddsList(user!.email).then((value){
-          BuddIdList = value as List<String>;
-          if(BuddIdList != null) BuddListNum = BuddIdList!.length;
-        });*/
       }
     });
   }
@@ -116,106 +110,41 @@ class BuddListModel extends ChangeNotifier {
     }
   }
 
-
-  void fetchBuddDoc()async{
-
-  }
-
-  void fetchBudds()async{
-
-  }
-
   void fetchBuddList()async{
     debugPrint('fetchBuddListに入ったよ！');
     while (BuddListNum == null) {
       await Future<void>.delayed(const Duration(milliseconds: 10));
     }
     if(!DataCheck) {
-      //_buddsStream = _db.doc("budds").snapshots();
-      /*Budd? budd;
-      for(String bId in _buddIdList){
-        debugPrint('検索しようとしているbuddIdの値→$bId');
-        _buddsStream = _db.doc("budds/$bId").snapshots();
-        _buddsStream!.map((snapshot){
-          Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-          final String buddId = snapshot.id;
-          final String buddName = data['buddName'];
-          final String buddPhoto = data['buddPhoto'];
-          final Map<String,bool> buddItems = data['items'];
-          debugPrint('テスト：buddNameの値→$buddName');
-          debugPrint('テスト：buddPhotoの値→$buddPhoto');
-          BuddList.add(Budd(buddId, buddName, buddPhoto,buddItems));
-          BuddListModel.DataCheck = false;
-        });
-
-        //if(budd != null) BuddList.add(budd!);
-
-        /*
-        _buddsStream!.listen((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          final String buddId = document.id;
-          final String buddName = data['buddName'];
-          final String buddPhoto = data['buddPhoto'];
-          final Map<String,bool> buddItems = data['items'];
-          debugPrint('テスト：buddNameの値→$buddName');
-          debugPrint('テスト：buddPhotoの値→$buddPhoto');
-          BuddList.add(Budd(buddId, buddName, buddPhoto,buddItems));
-          BuddListModel.DataCheck = false;
-        });*/
-
-        await Future<void>.delayed(const Duration(milliseconds: 1000));
-      }
-
-
-       */
-
-
-      while (BuddListNum == null) {
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
-
-      BuddListModel();
-      while (BuddListNum == null) {
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
 
       if (BuddListNum != null) debugPrint('BuddListModel()終わったよ！');
-      fetchBuddIdList();
+      for(int i = 1; i <= BuddListNum!; i++){
+        debugPrint('$i番目のfor文です！');
+        _homeModel = HomeModel(i);
+        while(_homeModel == null){
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+        }
+
+        _homeModel!.setBuddId(BuddIdList!.elementAt(i-1));
+        while(_homeModel!.getBuddId() == null){
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+        }
+
+        _homeModel!.fetchBuddInfo();
+        while(_homeModel!.getBudd() == null){
+          await Future<void>.delayed(const Duration(milliseconds: 10));
+        }
+        debugPrint('${_homeModel!.getBudd()!}');
+        BuddList.add(_homeModel!.getBudd()!);
+      }
       while (BuddList.length < BuddListNum!) {
         await Future<void>.delayed(const Duration(milliseconds: 10));
       }
       debugPrint('0番目の名前は：${BuddList.elementAt(0).buddName}');
       DataCheck = true;
 
-
     }
     notifyListeners();
-
   }
 
-
-  void fetchBuddIdList()async {
-    BuddList = <Budd>[];
-    for(int i = 1; i <= BuddListNum!; i++){
-      debugPrint('$i番目のfor文です！');
-      _homeModel = HomeModel(i);
-      while(_homeModel == null){
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
-
-      //_homeModel!.fetchBuddId((i-1).toString());
-      _homeModel!.setBuddId(BuddIdList!.elementAt(i-1));
-      while(_homeModel!.getBuddId() == null){
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
-
-
-      _homeModel!.fetchBuddInfo();
-      while(_homeModel!.getBudd() == null){
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
-      debugPrint('${_homeModel!.getBudd()!}');
-      BuddList.add(_homeModel!.getBudd()!);
-    }
-  }
 }

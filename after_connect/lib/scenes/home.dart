@@ -22,6 +22,7 @@ import '../models/budd_list_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
+  //static int? userId;
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -50,7 +51,7 @@ class _HomeState extends State<Home> {
 
     return MaterialApp(
       home: ChangeNotifierProvider<BuddListModel>(
-        //画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
+        ///画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
         create: (_) => BuddListModel()..fetchBuddList(),
         child: Scaffold(
           appBar: AppBar(
@@ -145,6 +146,7 @@ class _HomeState extends State<Home> {
 
 
             budd = BuddListModel.BuddList;
+            int userId = BuddListModel.userId;
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -164,7 +166,6 @@ class _HomeState extends State<Home> {
 
                   children: <Widget>[
                     Center(
-                      //child: SizedBox(
                         child: Opacity(
                           opacity: 0.7,
                           child: Image.network(
@@ -184,12 +185,10 @@ class _HomeState extends State<Home> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white70,
-                              //border: Border.all(color: Colors.black),
                             ),
                             child: Text(
                               '${budd!.elementAt(_homeNum-1).buddName}',
                               style: const TextStyle(
-                                //backgroundColor: Colors.black12,
                                 fontSize: 40.0,
                                 locale: Locale("ja", "JP"),
                               ),
@@ -259,6 +258,7 @@ class _HomeState extends State<Home> {
                                             if(_homeNum >= budd!.length){
                                               MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
                                               makeHome.setBudd(budd!);
+                                              makeHome.setUserId(userId);
                                               makeHome.showCustomDialog();
                                             }else{
                                               _rightPage();

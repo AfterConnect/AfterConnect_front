@@ -8,6 +8,7 @@ import '../main.dart';
 class UserToBuddDb{
   final _db = FirebaseFirestore.instance;
 
+  ///ユーザIDと仏壇IDをセットにしてDBに格納する
   void connectId(int userId, String buddId)async{
     await _db.collection("user_to_budd").add({
       "buddId":buddId,

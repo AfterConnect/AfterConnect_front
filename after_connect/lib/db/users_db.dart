@@ -57,7 +57,7 @@ class UsersDb {
     int _num = 0;
     List? _buddList;
     bool setCheck = true;
-    DocumentReference docRef = FirebaseFirestore.instance.doc('users/${user!.email}');
+    DocumentReference docRef = _db.doc('users/${user!.email}');
     DocumentSnapshot docSnapshot = await docRef.get();
 
 

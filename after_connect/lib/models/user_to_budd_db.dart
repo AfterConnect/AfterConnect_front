@@ -29,4 +29,5 @@ class UserToBuddDb{
     }
     return _buddId;
   }
+
 }

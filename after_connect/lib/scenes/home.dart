@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
+import 'package:after_connect_v2/models/user_to_budd_db.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
@@ -146,7 +147,10 @@ class _HomeState extends State<Home> {
 
 
             budd = BuddListModel.BuddList;
-            int userId = BuddListModel.userId;
+            int? userId;
+            UsersDb().getUserId(user!.email!).then((value){
+              userId = value;
+            });
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -253,12 +257,18 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: (){
+                                          onPressed: ()async{
                                             debugPrint('右の仏壇を押したよ');
                                             if(_homeNum >= budd!.length){
                                               MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
                                               makeHome.setBudd(budd!);
-                                              makeHome.setUserId(userId);
+                                              while(userId == null){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
+                                              makeHome.setUserId(userId!);
+                                              while(makeHome.getUserId() == null && makeHome.getUserId() == 0){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
                                               makeHome.showCustomDialog();
                                             }else{
                                               _rightPage();

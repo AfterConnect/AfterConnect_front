@@ -49,9 +49,7 @@ class HomeModel {
 
       });
     }
-    
-    
-    
+
     
   }
 

@@ -23,6 +23,9 @@ class MakeHomeDialogPage {
   void setBudd(List<Budd> budd){
     this.budd = budd;
   }
+  int? getUserId(){
+    return userId;
+  }
   void setUserId(int userId){
     this.userId = userId;
   }

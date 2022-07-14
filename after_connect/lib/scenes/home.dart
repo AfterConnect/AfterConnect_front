@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
+import 'package:after_connect_v2/db/user_to_budd_db.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
@@ -22,6 +23,7 @@ import '../models/budd_list_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
+  //static int? userId;
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -50,8 +52,8 @@ class _HomeState extends State<Home> {
 
     return MaterialApp(
       home: ChangeNotifierProvider<BuddListModel>(
-        //画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
-        create: (_) => BuddListModel()..fetchBuddList(),
+        ///画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
+        create: (_) => BuddListModel(),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -145,6 +147,10 @@ class _HomeState extends State<Home> {
 
 
             budd = BuddListModel.BuddList;
+            int? userId;
+            UsersDb().getUserId(user!.email!).then((value){
+              userId = value;
+            });
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -164,7 +170,6 @@ class _HomeState extends State<Home> {
 
                   children: <Widget>[
                     Center(
-                      //child: SizedBox(
                         child: Opacity(
                           opacity: 0.7,
                           child: Image.network(
@@ -184,12 +189,10 @@ class _HomeState extends State<Home> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white70,
-                              //border: Border.all(color: Colors.black),
                             ),
                             child: Text(
                               '${budd!.elementAt(_homeNum-1).buddName}',
                               style: const TextStyle(
-                                //backgroundColor: Colors.black12,
                                 fontSize: 40.0,
                                 locale: Locale("ja", "JP"),
                               ),
@@ -254,11 +257,18 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: (){
+                                          onPressed: ()async{
                                             debugPrint('右の仏壇を押したよ');
                                             if(_homeNum >= budd!.length){
                                               MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
                                               makeHome.setBudd(budd!);
+                                              while(userId == null){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
+                                              makeHome.setUserId(userId!);
+                                              while(makeHome.getUserId() == null && makeHome.getUserId() == 0){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
                                               makeHome.showCustomDialog();
                                             }else{
                                               _rightPage();

@@ -1,11 +1,7 @@
 import 'package:after_connect_v2/domain/budd.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../db/users_db.dart';
-import '../db/budd_db.dart';
-import '../main.dart';
 import 'budd_list_model.dart';
 
 class HomeModel {
@@ -18,16 +14,7 @@ class HomeModel {
 
 
   HomeModel(int homeId){
-
     _buddsNum = (homeId - 1).toString();
-    //_usersStream =
-    //    _db.collection('users/${user!.email}/buddsList').snapshots();
-
-    ///ユーザーID(e-mail)が含まれる仏壇を仏壇ID順に取得
-    //_usersStream = _db.collection("budds")
-    //    .where("userIds", arrayContains: user!.email).snapshots();
-
-    //fetchBuddId(_buddsNum!);
   }
 
   String? getBuddId(){
@@ -62,9 +49,7 @@ class HomeModel {
 
       });
     }
-    
-    
-    
+
     
   }
 
@@ -74,6 +59,7 @@ class HomeModel {
         FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
     if(_buddsStream != null){
+      buddIsUsed(buddId!);
       _buddsStream!.listen((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String buddId = document.id;

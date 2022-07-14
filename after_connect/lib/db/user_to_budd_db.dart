@@ -8,6 +8,7 @@ import '../main.dart';
 class UserToBuddDb{
   final _db = FirebaseFirestore.instance;
 
+  ///ユーザIDと仏壇IDをセットにしてDBに格納する
   void connectId(int userId, String buddId)async{
     await _db.collection("user_to_budd").add({
       "buddId":buddId,
@@ -20,7 +21,7 @@ class UserToBuddDb{
   Future<List<String>> getBuddIdList(int userId)async{
     List<String> _buddId = <String>[];
     /// ユーザIDが登録されているドキュメントを持ってくる
-    QuerySnapshot querySnapshot = await _db.collection("user_to_budd").where("userId",isEqualTo: userId).where("isUsed",isEqualTo: true)/*.orderBy("timestamp", descending: true)*/.get();
+    QuerySnapshot querySnapshot = await _db.collection("user_to_budd").where("userId",isEqualTo: userId).where("isUsed",isEqualTo: true).orderBy("timestamp", descending: false).get();
     DocumentSnapshot? docSnapshot;
     for(var doc in querySnapshot.docs) {
       docSnapshot = await doc.reference.get();
@@ -28,4 +29,5 @@ class UserToBuddDb{
     }
     return _buddId;
   }
+
 }

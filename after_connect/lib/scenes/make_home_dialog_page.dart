@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import '../db/budd_db.dart';
 import '../domain/budd.dart';
 import '../models/budd_list_model.dart';
-import '../models/user_to_budd_db.dart';
+import '../db/user_to_budd_db.dart';
 import 'modal_overlay.dart';
 import 'home.dart';
 
@@ -135,7 +135,6 @@ class MakeHomeDialogPage {
                         while(buddId == null){
                           await Future<void>.delayed(const Duration(milliseconds: 10));
                         }
-                        //await Future<void>.delayed(const Duration(milliseconds: 1000));
 
                         while(userId == null || userId == 0){
                           await Future<void>.delayed(const Duration(milliseconds: 10));
@@ -145,7 +144,7 @@ class MakeHomeDialogPage {
                         await Future<void>.delayed(const Duration(milliseconds: 1000));
 
                         /// 中間テーブル(user_to_budd)からユーザIDと紐づいている、
-                        /// かつ先程作ったばかりの未使用(isUsed = false)のものを2つ抽出
+                        /// かつ先程作ったばかりの未使用(isUsed = false)のものを1つ抽出
                         QuerySnapshot userSnapshot = await _db.collection("user_to_budd").where("userId",isEqualTo: userId!).where("buddId",isEqualTo: buddId).where("isUsed",isEqualTo: false).limit(1).get();
                         for(var doc in userSnapshot.docs) {
                           doc.reference.update(
@@ -161,9 +160,9 @@ class MakeHomeDialogPage {
                           }
                         }
 
-                        //BuddDb().makeBudd();
                         await Future<void>.delayed(const Duration(milliseconds: 1500));
                         BuddListModel.DataCheck = false;
+                        //BuddListModel().fetchBuddList();
                         hideCustomDialog();
                         Get.offAllNamed('${Home.routeName}/${BuddListModel.BuddListNum!+1}');
                       },
@@ -185,10 +184,17 @@ class MakeHomeDialogPage {
                           locale: Locale("ja", "JP"),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         AddHomeDialogPage addHome = AddHomeDialogPage(context);
                         hideCustomDialog();
                         addHome.setBudd(budd!);
+                        while(userId == null){
+                          await Future<void>.delayed(const Duration(milliseconds: 10));
+                        }
+                        addHome.setUserId(userId!);
+                        while(addHome.getUserId() == null && addHome.getUserId() == 0){
+                          await Future<void>.delayed(const Duration(milliseconds: 10));
+                        }
                         addHome.showCustomDialog();
                       },
                     ),

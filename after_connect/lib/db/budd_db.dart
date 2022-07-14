@@ -80,7 +80,7 @@ class BuddDb{
     await docRef.set({
       'isUsed': false,
       'buddName': '故人のお名前',
-      'buddPhoto': 'http://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
+      'buddPhoto': 'https://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
       'items':{
         'kou': false,
         'hana': false,

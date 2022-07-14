@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
-import 'package:after_connect_v2/models/user_to_budd_db.dart';
+import 'package:after_connect_v2/db/user_to_budd_db.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
@@ -53,7 +53,7 @@ class _HomeState extends State<Home> {
     return MaterialApp(
       home: ChangeNotifierProvider<BuddListModel>(
         ///画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
-        create: (_) => BuddListModel()..fetchBuddList(),
+        create: (_) => BuddListModel(),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,

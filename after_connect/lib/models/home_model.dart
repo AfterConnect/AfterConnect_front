@@ -59,6 +59,7 @@ class HomeModel {
         FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
     if(_buddsStream != null){
+      buddIsUsed(buddId!);
       _buddsStream!.listen((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String buddId = document.id;

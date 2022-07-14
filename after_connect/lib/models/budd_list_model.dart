@@ -1,4 +1,4 @@
-import 'package:after_connect_v2/models/user_to_budd_db.dart';
+import 'package:after_connect_v2/db/user_to_budd_db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +37,16 @@ class BuddListModel extends ChangeNotifier {
             if(BuddIdList != null){
               BuddListNum = BuddIdList!.length;
               debugPrint("仏壇IDだよ→$bId");
+              fetchBuddList();
             }
           });
         });
       }
     });
+  }
+
+  void onlyWait()async{
+    await Future<void>.delayed(const Duration(milliseconds: 2000));
   }
 
   ///ユーザIDが存在するかを確認
@@ -70,7 +75,7 @@ class BuddListModel extends ChangeNotifier {
       UsersDb().makeUserDb().then((value){
         ///ここ超大事
         ///makeBudd()で余分なuserIdを消す際、値の小さいのを消している
-        ///なのでそれに合わせたif文を挟んでいる
+        ///なのでそれに合わせて最大値を保存するif文を挟んでいる
         if(userId < value) userId = value;
       });
 
@@ -116,7 +121,10 @@ class BuddListModel extends ChangeNotifier {
       await Future<void>.delayed(const Duration(milliseconds: 10));
     }
     if(!DataCheck) {
-
+      BuddList = <Budd>[];
+      while(BuddList.isNotEmpty){
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
       if (BuddListNum != null) debugPrint('BuddListModel()終わったよ！');
       for(int i = 1; i <= BuddListNum!; i++){
         debugPrint('$i番目のfor文です！');

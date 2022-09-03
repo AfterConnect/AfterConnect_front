@@ -127,6 +127,24 @@ class BuddDb{
     }
   }
 
+  ///お供えをセットする
+  Future<void> useBuddItem(String buddId , String itemName)async{
+    DocumentReference docRef = _db.doc('budds/$buddId');
+    DocumentSnapshot docSnapshot = await docRef.get();
+
+    if(docSnapshot.exists){
+      await docRef.set(
+        {
+          'items':{
+            itemName: true
+          },
+        },
+        SetOptions(merge: true),
+      );
+      BuddListModel.DataCheck = false;
+    }
+  }
+
   Future<String?> getBuddName(String? buddId) async{
     DocumentReference docRef = _db.doc('budds/$buddId');
     DocumentSnapshot docSnapshot = await docRef.get();

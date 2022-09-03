@@ -85,14 +85,13 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                // primary: Colors.white,
-                                                backgroundColor: budd!.elementAt(_homeNum!).buddItems['hana'] == true ?
+                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['hana'] == true ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!).buddItems['hana'] == true ? null
+                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['hana'] == true ? null
                                                   :() {
-                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!).buddId, 'hana').then((value){
+                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'hana').then((value){
                                                   BuddListModel.DataCheck = false;
                                                   hideCustomDialog();
                                                 });
@@ -122,13 +121,13 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!).buddItems['kome'] == true ?
+                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['kome'] == true ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!).buddItems['kome'] == true ? null
+                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['kome'] == true ? null
                                                   :() {
-                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!).buddId, 'kome').then((value){
+                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kome').then((value){
                                                   BuddListModel.DataCheck = false;
                                                   hideCustomDialog();
                                                 });
@@ -159,13 +158,13 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!).buddItems['toumyou'] == true ?
+                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['toumyou'] == true ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!).buddItems['toumyou'] == true ? null
+                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['toumyou'] == true ? null
                                                   :() {
-                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!).buddId, 'toumyou').then((value){
+                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'toumyou').then((value){
                                                   BuddListModel.DataCheck = false;
                                                   hideCustomDialog();
                                                 });
@@ -201,13 +200,13 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!).buddItems['mizu'] == true ?
+                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['mizu'] == true ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!).buddItems['mizu'] == true ? null
+                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['mizu'] == true ? null
                                                   :() {
-                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!).buddId, 'mizu').then((value){
+                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'mizu').then((value){
                                                   BuddListModel.DataCheck = false;
                                                   hideCustomDialog();
                                                 });
@@ -237,14 +236,14 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!).buddItems['kou'] == true ?
+                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['kou'] == true ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
 
-                                              onPressed:budd!.elementAt(_homeNum!).buddItems['kou'] == true ? null
+                                              onPressed:budd!.elementAt(_homeNum!-1).buddItems['kou'] == true ? null
                                                 :() {
-                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!).buddId, 'kou').then((value){
+                                                BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kou').then((value){
                                                   BuddListModel.DataCheck = false;
                                                   hideCustomDialog();
                                                 });

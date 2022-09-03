@@ -326,7 +326,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum).buddItems['hana'] == true){
+                                if(budd!.elementAt(_homeNum-1).buddItems['hana'] == true){
                                   return Image.asset('images/hana.png');
                                 }else{
                                   return null;
@@ -336,7 +336,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum).buddItems['kome'] == true){
+                                if(budd!.elementAt(_homeNum-1).buddItems['kome'] == true){
                                   return Image.asset('images/kome.png');
                                 }else{
                                   return null;
@@ -346,7 +346,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum).buddItems['toumyou'] == true){
+                                if(budd!.elementAt(_homeNum-1).buddItems['toumyou'] == true){
                                   return Image.asset('images/toumyou.png');
                                 }else{
                                   return null;
@@ -356,7 +356,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum).buddItems['mizu'] == true){
+                                if(budd!.elementAt(_homeNum-1).buddItems['mizu'] == true){
                                   return Image.asset('images/mizu.png');
                                 }else{
                                   return null;
@@ -366,7 +366,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum).buddItems['kou'] == true){
+                                if(budd!.elementAt(_homeNum-1).buddItems['kou'] == true){
                                   return Image.asset('images/kou.png');
                                 }else{
                                   return null;

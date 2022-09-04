@@ -4,5 +4,5 @@ class Budd {
   String buddId;
   String buddName;
   String buddPhoto;
-  Map<String,bool> buddItems;
+  Map<String,DateTime> buddItems;
 }

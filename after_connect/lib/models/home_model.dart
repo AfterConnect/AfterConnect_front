@@ -65,11 +65,17 @@ class HomeModel {
         final String buddId = document.id;
         final String buddName = data['buddName'];
         final String buddPhoto = data['buddPhoto'];
-        final Map<String,bool> buddItems = Map<String, bool>.from(data['items']);
-        debugPrint('テスト：buddNameの値→$buddName');
-        debugPrint('テスト：buddPhotoの値→$buddPhoto');
-        budd = Budd(buddId, buddName, buddPhoto,buddItems);
-        BuddListModel.DataCheck = false;
+        final Map<String,DateTime> buddItems = () {
+          Map<String, DateTime> map = {};
+          Map<String, Timestamp>.from(data['items']).forEach((key, value) {
+            map[key] = value.toDate();
+          });
+          return map;
+        }();
+          debugPrint('テスト：buddNameの値→$buddName');
+          debugPrint('テスト：buddPhotoの値→$buddPhoto');
+          budd = Budd(buddId, buddName, buddPhoto,buddItems);
+          BuddListModel.DataCheck = false;
       });
     }
   }

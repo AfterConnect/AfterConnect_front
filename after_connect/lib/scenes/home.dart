@@ -24,6 +24,7 @@ import '../models/budd_list_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
+  static const int lostTime = 60*60*24*14;
   //static int? userId;
   const Home({Key? key}) : super(key: key);
 
@@ -69,6 +70,7 @@ class _HomeState extends State<Home> {
                 //_imgUrl = await ImageDb().imgDownloadPath('default/budd/budd_photo.png');
                 //debugPrint(_imgUrl);
                 //debugPrint(BuddListModel());
+                //BuddDb().reset();
 
                 Menu menu = const Menu();
                 menu.setBudd(budd!);
@@ -326,7 +328,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum-1).buddItems['hana'] == true){
+                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['hana'])!).inSeconds) <= Home.lostTime){
                                   return Image.asset('images/hana.png');
                                 }else{
                                   return null;
@@ -336,7 +338,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum-1).buddItems['kome'] == true){
+                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kome'])!).inSeconds) <= Home.lostTime){
                                   return Image.asset('images/kome.png');
                                 }else{
                                   return null;
@@ -346,7 +348,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum-1).buddItems['toumyou'] == true){
+                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime){
                                   return Image.asset('images/toumyou.png');
                                 }else{
                                   return null;
@@ -356,7 +358,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum-1).buddItems['mizu'] == true){
+                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime){
                                   return Image.asset('images/mizu.png');
                                 }else{
                                   return null;
@@ -366,7 +368,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               width: 65.0,
                               child: () {
-                                if(budd!.elementAt(_homeNum-1).buddItems['kou'] == true){
+                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kou'])!).inSeconds) <= Home.lostTime){
                                   return Image.asset('images/kou.png');
                                 }else{
                                   return null;

@@ -85,11 +85,11 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['hana'] == true ?
+                                                backgroundColor: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['hana'])!).inSeconds) <= Home.lostTime ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['hana'] == true ? null
+                                              onPressed: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['hana'])!).inSeconds) <= Home.lostTime ? null
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'hana').then((value){
                                                   BuddListModel.DataCheck = false;
@@ -121,11 +121,11 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['kome'] == true ?
+                                                backgroundColor: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['kome'])!).inSeconds) <= Home.lostTime ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['kome'] == true ? null
+                                              onPressed: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['kome'])!).inSeconds) <= Home.lostTime ? null
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kome').then((value){
                                                   BuddListModel.DataCheck = false;
@@ -158,11 +158,11 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['toumyou'] == true ?
+                                                backgroundColor: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['toumyou'] == true ? null
+                                              onPressed: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime ? null
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'toumyou').then((value){
                                                   BuddListModel.DataCheck = false;
@@ -200,11 +200,11 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['mizu'] == true ?
+                                                backgroundColor: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
-                                              onPressed: budd!.elementAt(_homeNum!-1).buddItems['mizu'] == true ? null
+                                              onPressed: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime ? null
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'mizu').then((value){
                                                   BuddListModel.DataCheck = false;
@@ -236,12 +236,12 @@ class BuddItemPage {
                                               style: OutlinedButton.styleFrom(
                                                 side: const BorderSide(
                                                     width: 1.0, color: Colors.black),
-                                                backgroundColor: budd!.elementAt(_homeNum!-1).buddItems['kou'] == true ?
+                                                backgroundColor: (DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['kou'])!).inSeconds) <= Home.lostTime ?
                                                                                   Colors.grey:Colors.white,
                                                 minimumSize: const Size.fromHeight(10),
                                               ),
 
-                                              onPressed:budd!.elementAt(_homeNum!-1).buddItems['kou'] == true ? null
+                                              onPressed:(DateTime.now().difference((budd!.elementAt(_homeNum!-1).buddItems['kou'])!).inSeconds) <= Home.lostTime ? null
                                                 :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kou').then((value){
                                                   BuddListModel.DataCheck = false;

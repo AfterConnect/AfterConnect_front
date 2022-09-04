@@ -82,11 +82,11 @@ class BuddDb{
       'buddName': '故人のお名前',
       'buddPhoto': 'https://firebasestorage.googleapis.com/v0/b/after-connect.appspot.com/o/default%2Fbudd%2Fbudd_photo.png?alt=media&token=f52e5376-fc1d-40f9-b467-710609280149',
       'items':{
-        'kou': false,
-        'hana': false,
-        'toumyou': false,
-        'mizu': false,
-        'kome': false,
+        'kou': DateTime(1970, 1, 1, 0, 0),
+        'hana': DateTime(1970, 1, 1, 0, 0),
+        'toumyou': DateTime(1970, 1, 1, 0, 0),
+        'mizu': DateTime(1970, 1, 1, 0, 0),
+        'kome': DateTime(1970, 1, 1, 0, 0),
       },
     });
 
@@ -136,7 +136,7 @@ class BuddDb{
       await docRef.set(
         {
           'items':{
-            itemName: true
+            itemName: Timestamp.fromDate(DateTime.now())
           },
         },
         SetOptions(merge: true),
@@ -168,6 +168,48 @@ class BuddDb{
     if(docSnapshot.exists){
       return docSnapshot['isUsed'];
     }
+  }
+
+  void reset()async{
+    List<DocumentReference> documentList = [];
+    List docIdList = [];
+
+    await _db.collection('budds').get().then(
+          (QuerySnapshot querySnapshot) => {
+        querySnapshot.docs.forEach(
+              (doc) {
+            docIdList.add(doc.id);
+          },
+        ),
+      },
+    );
+
+
+    //final snapshot = _db.collection('budds');
+
+
+
+    //documentList.add(snapshot.doc());
+    docIdList.forEach((element) async{
+      var docRef = _db.collection('budds').doc(element);
+      var DocSnapshot = await docRef.get();
+      /*if(DocSnapshot['isUsed'] == false){
+       docRef.delete();
+      }*/
+
+      await docRef.set({
+          'items':{
+            'kou': DateTime(1970, 1, 1, 0, 0),
+            'hana': DateTime(1970, 1, 1, 0, 0),
+            'toumyou': DateTime(1970, 1, 1, 0, 0),
+            'mizu': DateTime(1970, 1, 1, 0, 0),
+            'kome': DateTime(1970, 1, 1, 0, 0),
+          },
+        },
+        SetOptions(merge: true),
+      );
+
+    });
   }
 
 

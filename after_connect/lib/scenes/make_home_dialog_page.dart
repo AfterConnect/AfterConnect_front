@@ -19,6 +19,7 @@ class MakeHomeDialogPage {
   MakeHomeDialogPage(this.context) : super();
   List<Budd>? budd;
   int? userId;
+  bool _reload = false;
 
   void setBudd(List<Budd> budd){
     this.budd = budd;
@@ -162,9 +163,9 @@ class MakeHomeDialogPage {
 
                         await Future<void>.delayed(const Duration(milliseconds: 1500));
                         BuddListModel.DataCheck = false;
-                        //BuddListModel().fetchBuddList();
+                        _reload = true;
                         hideCustomDialog();
-                        Get.offAllNamed('${Home.routeName}/${BuddListModel.BuddListNum!+1}');
+
                       },
                     ),
                     const SizedBox(
@@ -231,7 +232,10 @@ class MakeHomeDialogPage {
    * 非表示
    */
   void hideCustomDialog() {
-
-    Navigator.of(context).pop();
+    if(_reload){
+      Get.offAllNamed('${Home.routeName}/${BuddListModel.BuddListNum!+1}');
+    }else{
+      Navigator.of(context).pop();
+    }
   }
 }

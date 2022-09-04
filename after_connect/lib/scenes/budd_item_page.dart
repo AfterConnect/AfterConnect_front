@@ -17,6 +17,7 @@ class BuddItemPage {
   String? _shareCode;
   int? _homeNum;
   List<Budd>? budd;
+  bool _reload = false;
 
   void setHomeNum(int homeNum){
     _homeNum = homeNum;
@@ -29,6 +30,7 @@ class BuddItemPage {
    * 表示
    */
   void showCustomDialog() {
+
 
     Navigator.push(
       context,
@@ -93,6 +95,7 @@ class BuddItemPage {
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'hana').then((value){
                                                   BuddListModel.DataCheck = false;
+                                                  _reload = true;
                                                   hideCustomDialog();
                                                 });
                                               },
@@ -129,6 +132,7 @@ class BuddItemPage {
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kome').then((value){
                                                   BuddListModel.DataCheck = false;
+                                                  _reload = true;
                                                   hideCustomDialog();
                                                 });
                                               },
@@ -166,6 +170,7 @@ class BuddItemPage {
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'toumyou').then((value){
                                                   BuddListModel.DataCheck = false;
+                                                  _reload = true;
                                                   hideCustomDialog();
                                                 });
                                               },
@@ -208,6 +213,7 @@ class BuddItemPage {
                                                   :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'mizu').then((value){
                                                   BuddListModel.DataCheck = false;
+                                                  _reload = true;
                                                   hideCustomDialog();
                                                 });
                                               },
@@ -245,6 +251,7 @@ class BuddItemPage {
                                                 :() {
                                                 BuddDb().useBuddItem(budd!.elementAt(_homeNum!-1).buddId, 'kou').then((value){
                                                   BuddListModel.DataCheck = false;
+                                                  _reload = true;
                                                   hideCustomDialog();
                                                 });
                                               },
@@ -338,7 +345,10 @@ class BuddItemPage {
    * 非表示
    */
   void hideCustomDialog() {
-
-    Navigator.of(context).pop(budd);
+    if(_reload){
+      Get.offAllNamed(Home.routeName + '/$_homeNum');
+    }else{
+      Navigator.of(context).pop();
+    }
   }
 }

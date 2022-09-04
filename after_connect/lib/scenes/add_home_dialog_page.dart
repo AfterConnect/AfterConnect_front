@@ -19,6 +19,7 @@ class AddHomeDialogPage {
   List<Budd>? budd;
   int? userId;
   final _db = FirebaseFirestore.instance;
+  bool _reload = false;
 
   void setBudd(List<Budd> budd){
     this.budd = budd;
@@ -199,10 +200,8 @@ class AddHomeDialogPage {
                                       }
                                     }
                                     await Future<void>.delayed(const Duration(milliseconds: 1000));
-
-                                    Get.offAllNamed(
-                                        '${Home.routeName}/${BuddListModel
-                                            .BuddListNum! + 1}');
+                                    _reload = true;
+                                    hideCustomDialog();
                                     Get.defaultDialog(
                                       title: '新しい仏壇を追加しました',
                                       middleText: '',
@@ -270,7 +269,10 @@ class AddHomeDialogPage {
    * 非表示
    */
   void hideCustomDialog() {
-
-    Navigator.of(context).pop();
+    if(_reload){
+      Get.offAllNamed('${Home.routeName}/${BuddListModel.BuddListNum!+1}');
+    }else{
+      Navigator.of(context).pop();
+    }
   }
 }

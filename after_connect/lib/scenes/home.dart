@@ -417,7 +417,6 @@ class _HomeState extends State<Home> {
                                 buddItem.showCustomDialog();
                               }
 
-                              BuddListModel.DataCheck = false;
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(

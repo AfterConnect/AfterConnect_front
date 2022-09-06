@@ -1,11 +1,7 @@
 import 'package:after_connect_v2/domain/budd.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../db/users_db.dart';
-import '../db/budd_db.dart';
-import '../main.dart';
 import 'budd_list_model.dart';
 
 class HomeModel {
@@ -14,13 +10,11 @@ class HomeModel {
   Stream<DocumentSnapshot>? _buddsStream;
   String? buddId;
   Budd? budd;
+  final _db = FirebaseFirestore.instance;
 
 
   HomeModel(int homeId){
     _buddsNum = (homeId - 1).toString();
-    _usersStream =
-        FirebaseFirestore.instance.collection('users/${user!.email}/buddsList').snapshots();
-    //fetchBuddId(_buddsNum!);
   }
 
   String? getBuddId(){
@@ -28,6 +22,12 @@ class HomeModel {
   }
   Budd? getBudd(){
     return budd;
+  }
+  void setBuddId(String bId){
+    buddId = bId;
+  }
+  void setBudd(Budd _budd){
+    budd = _budd;
   }
   Stream<QuerySnapshot>? getUserStream(){
 
@@ -39,6 +39,7 @@ class HomeModel {
       _usersStream!.listen((QuerySnapshot snapshot) {
         final String _buddId = snapshot.docs.map((DocumentSnapshot document){
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          _buddsStream = snapshot.docChanges as Stream<DocumentSnapshot<Object?>>?;
           final String buddId = data[buddNum];
           this.buddId = buddId;
           buddIsUsed(buddId);
@@ -48,6 +49,8 @@ class HomeModel {
 
       });
     }
+
+    
   }
 
 
@@ -56,21 +59,29 @@ class HomeModel {
         FirebaseFirestore.instance.collection('budds').doc(buddId).snapshots();
 
     if(_buddsStream != null){
+      buddIsUsed(buddId!);
       _buddsStream!.listen((DocumentSnapshot document) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         final String buddId = document.id;
         final String buddName = data['buddName'];
         final String buddPhoto = data['buddPhoto'];
-        debugPrint('テスト：buddNameの値→$buddName');
-        debugPrint('テスト：buddPhotoの値→$buddPhoto');
-        budd = Budd(buddId, buddName, buddPhoto);
-        BuddListModel.DataCheck = false;
+        final Map<String,DateTime> buddItems = () {
+          Map<String, DateTime> map = {};
+          Map<String, Timestamp>.from(data['items']).forEach((key, value) {
+            map[key] = value.toDate();
+          });
+          return map;
+        }();
+          debugPrint('テスト：buddNameの値→$buddName');
+          debugPrint('テスト：buddPhotoの値→$buddPhoto');
+          budd = Budd(buddId, buddName, buddPhoto,buddItems);
+          BuddListModel.DataCheck = false;
       });
     }
   }
 
   void buddIsUsed(String buddId)async{
-    final docRef = FirebaseFirestore.instance.doc('budds/$buddId');
+    final docRef = _db.doc('budds/$buddId');
     await docRef.set({
       'isUsed': true,
     },

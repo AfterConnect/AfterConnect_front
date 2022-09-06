@@ -11,18 +11,19 @@ class ImageDb {
   File? imageFile;
 
   ///引数で与えられたパスへ画像をアップロード
-  void imgUpload(String imgPath) async {
+  void imgUpload(String imgPath, File image) async {
     // imagePickerで画像を選択する
     // upload
-    final pickerFile = await ImagePicker().pickImage(
+    /*final pickerFile = await ImagePicker().pickImage(
         source: ImageSource.gallery);
     if (pickerFile != null) {
       imageFile = File(pickerFile.path);
-    }
+    }*/
+
 
     FirebaseStorage storage = FirebaseStorage.instance;
     try {
-      await storage.ref(imgPath).putFile(imageFile!);
+      await storage.ref(imgPath).putFile(image);
     } catch (e) {
       debugPrint('$e');
     }

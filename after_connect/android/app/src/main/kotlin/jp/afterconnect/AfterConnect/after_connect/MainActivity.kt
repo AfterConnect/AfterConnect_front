@@ -1,4 +1,4 @@
-package com.example.after_connect_v2
+package jp.afterconnect.AfterConnect.after_connect
 
 import io.flutter.embedding.android.FlutterActivity
 

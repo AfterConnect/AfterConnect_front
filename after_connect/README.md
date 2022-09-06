@@ -1,4 +1,4 @@
-# after_connect_v2
+# after_connect
 
 A new Flutter project.
 

@@ -47,4 +47,9 @@ app.*.map.json
 
 # APIキーなどの公開しちゃダメなやつ
 /android/app/google-services.json
+/ios/firebase_app_id_file.json
 /ios/Runner/GoogleService-Info.plist
+/lib/firebase_options.dart
+
+# flutter version manager
+.fvm

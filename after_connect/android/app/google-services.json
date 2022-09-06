@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "109582742242-aakh5lad2m50uhi2c7q97mmpcggipies.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.after_connect_v2",
+            "certificate_hash": "1c177ab8e25826d21d443a13e87aef709f67b0ba"
+          }
+        },
+        {
           "client_id": "109582742242-opveaj40vvs5irppi1go440rk5lp6eke.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +45,49 @@
             {
               "client_id": "109582742242-opveaj40vvs5irppi1go440rk5lp6eke.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "109582742242-3s13cto67i3m214nbmhogibmu5amtkhj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "jp.afterconnect.AfterConnect.afterConnect"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109582742242:android:7947fb1f23de06fa1764bb",
+        "android_client_info": {
+          "package_name": "jp.afterconnect.AfterConnect.after_connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109582742242-opveaj40vvs5irppi1go440rk5lp6eke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcwxLbWsGjZdvcYbirCqPAijzL6rf5jTg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109582742242-opveaj40vvs5irppi1go440rk5lp6eke.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "109582742242-3s13cto67i3m214nbmhogibmu5amtkhj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "jp.afterconnect.AfterConnect.afterConnect"
+              }
             }
           ]
         }

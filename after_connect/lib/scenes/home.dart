@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:after_connect_v2/domain/budd.dart';
+import 'package:after_connect_v2/db/user_to_budd_db.dart';
+import 'package:after_connect_v2/scenes/budd_item_page.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
@@ -22,6 +24,8 @@ import '../models/budd_list_model.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/home';
+  static const int lostTime = 60*60*24*14;
+  //static int? userId;
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -41,17 +45,20 @@ class _HomeState extends State<Home> {
       _homeNum++;
     });
   }
-  void _rePage(){
+  void _rePage(List<Budd> newBudd){
+    setState((){
+      budd = newBudd;
+    });
   }
 
   @override
   Widget build(BuildContext context){
 
-
+    //debugPrint('ビルドしたよ！');
     return MaterialApp(
       home: ChangeNotifierProvider<BuddListModel>(
-        //画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
-        create: (_) => BuddListModel()..fetchBuddList(),
+        ///画面が作成されたタイミングで BuddListModel、fetchBuddList() が発火
+        create: (_) => BuddListModel(),
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -63,6 +70,7 @@ class _HomeState extends State<Home> {
                 //_imgUrl = await ImageDb().imgDownloadPath('default/budd/budd_photo.png');
                 //debugPrint(_imgUrl);
                 //debugPrint(BuddListModel());
+                //BuddDb().reset();
 
                 Menu menu = const Menu();
                 menu.setBudd(budd!);
@@ -85,8 +93,6 @@ class _HomeState extends State<Home> {
               ),
               IconButton(
                 onPressed: (){
-                  /// TODO:編集画面を作る
-                  /// TODO:編集時のあれこれメソッドを別のクラスに作る
                   const HomeEditPage().setBudd(budd!);
                   Get.toNamed('${Home.routeName}/$_homeNum${HomeEditPage.routeName}');
                 },
@@ -133,8 +139,18 @@ class _HomeState extends State<Home> {
                 ),
               );
             }
-            if(BuddListModel.BuddList!.length < BuddListModel.BuddListNum!){
+            if(BuddListModel.BuddList.length < BuddListModel.BuddListNum!){
               debugPrint('二つ目のローディング！');
+              return Container(
+                color: Colors.black38,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+
+            if(BuddListModel.BuddList.length < _homeNum){
+              debugPrint('データ更新のためのローディング！');
               return Container(
                 color: Colors.black38,
                 child: const Center(
@@ -145,6 +161,10 @@ class _HomeState extends State<Home> {
 
 
             budd = BuddListModel.BuddList;
+            int? userId;
+            UsersDb().getUserId(user!.email!).then((value){
+              userId = value;
+            });
 
             debugPrint('Columuを作り始めたよ！');
             if(budd == null){
@@ -164,7 +184,6 @@ class _HomeState extends State<Home> {
 
                   children: <Widget>[
                     Center(
-                      //child: SizedBox(
                         child: Opacity(
                           opacity: 0.7,
                           child: Image.network(
@@ -176,6 +195,9 @@ class _HomeState extends State<Home> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
                           Container(
                             padding: const EdgeInsets.only(
                               left: 10,
@@ -184,12 +206,10 @@ class _HomeState extends State<Home> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white70,
-                              //border: Border.all(color: Colors.black),
                             ),
                             child: Text(
-                              '${budd!.elementAt(_homeNum-1).buddName}',
+                              budd!.elementAt(_homeNum-1).buddName,
                               style: const TextStyle(
-                                //backgroundColor: Colors.black12,
                                 fontSize: 40.0,
                                 locale: Locale("ja", "JP"),
                               ),
@@ -254,11 +274,18 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: (){
+                                          onPressed: ()async{
                                             debugPrint('右の仏壇を押したよ');
                                             if(_homeNum >= budd!.length){
                                               MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
                                               makeHome.setBudd(budd!);
+                                              while(userId == null){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
+                                              makeHome.setUserId(userId!);
+                                              while(makeHome.getUserId() == null && makeHome.getUserId() == 0){
+                                                await Future<void>.delayed(const Duration(milliseconds: 10));
+                                              }
                                               makeHome.showCustomDialog();
                                             }else{
                                               _rightPage();
@@ -273,7 +300,9 @@ class _HomeState extends State<Home> {
                                   ),
                                 ],
                               ),
-                              Center(
+
+                              ///開発時用テキスト
+                              /*Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -297,12 +326,93 @@ class _HomeState extends State<Home> {
                                     })(),
                                   ],
                                 ),
-                              ),
+                              ),*/
 
                             ],
                           ),
                         ),
                       ],
+                    ),
+
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 350, right: 0, bottom: 0, left: 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
+                              child: SizedBox(
+                                width: 65.0,
+                                height: 120,
+                                child: () {
+                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['hana'])!).inSeconds) <= Home.lostTime){
+                                    return Image.asset('images/hana.png');
+                                  }else{
+                                    return null;
+                                  }
+                                }(),
+                              ),
+                            ),
+                            Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
+                              child: SizedBox(
+                                width: 65.0,
+                                height: 120,
+                                child: () {
+                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kome'])!).inSeconds) <= Home.lostTime){
+                                    return Image.asset('images/kome.png');
+                                  }else{
+                                    return null;
+                                  }
+                                }(),
+                              ),
+                            ),
+                            Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
+                              child: SizedBox(
+                                width: 65.0,
+                                height: 120,
+                                child: () {
+                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime){
+                                    return Image.asset('images/toumyou.png');
+                                  }else{
+                                    return null;
+                                  }
+                                }(),
+                              ),
+                            ),
+                            Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
+                              child: SizedBox(
+                                width: 65.0,
+                                height: 120,
+                                child: () {
+                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime){
+                                    return Image.asset('images/mizu.png');
+                                  }else{
+                                    return null;
+                                  }
+                                }(),
+                              ),
+                            ),
+                            Container(
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
+                              child: SizedBox(
+                                width: 65.0,
+                                height: 120,
+                                child: () {
+                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kou'])!).inSeconds) <= Home.lostTime){
+                                    return Image.asset('images/kou.png');
+                                  }else{
+                                    return null;
+                                  }
+                                }(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
 
                     Container(
@@ -315,60 +425,24 @@ class _HomeState extends State<Home> {
                         children: [
 
 
-
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-
-                          /*OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  width: 1.0, color: Colors.black),
-                              // primary: Colors.white,
-                              backgroundColor: Colors.white,
-                              minimumSize: const Size.fromHeight(10),
-                            ),
-                            onPressed: () {
-                              if(_homeNum >= budd!.length){
-                                MakeHomeDialogPage makeHome = MakeHomeDialogPage(context);
-                                makeHome.setBudd(budd!);
-                                makeHome.showCustomDialog();
-                              }else{
-                                _rightPage();
-                              }
-                            },
-
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10.0,
-                                horizontal: 10.0,
-                              ),
-                              child: Text(
-                                '右の仏壇へ',
-                                style: TextStyle(
-                                  color: Colors.grey[900],
-                                  fontSize: 24.0,
-                                ),
-                              ),
-                            ),
-                          ),*/
-
-                          const SizedBox(
-                            height: 10.0,
-                          ),
-
                           OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(
                                   width: 1.0, color: Colors.black),
                               // primary: Colors.white,
-                              backgroundColor: Colors.white,
+                              backgroundColor: Colors.white70,
                               minimumSize: const Size.fromHeight(10),
                             ),
                             onPressed: () {
-                              //ルーティングで画面遷移管理
-                              //Navigator.pushNamed(context, HogeHoge.routeName);
-                              BuddListModel.DataCheck = false;
+
+                              debugPrint('Homeにてお供えボタンが押されました');
+                              BuddItemPage buddItem = BuddItemPage(context);
+                              buddItem.setHomeNum(_homeNum);
+                              if(budd != null){
+                                buddItem.setBudd(budd!);
+                                buddItem.showCustomDialog();
+                              }
+
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(

@@ -86,7 +86,7 @@ class ShareCodeDialogPage {
                                           border: Border.all(color: Colors.black),
                                         ),
                                         child: Text(
-                                          "  ${BuddListModel.BuddList!.elementAt(_homeNum!-1).buddId}  ",
+                                          "  ${BuddListModel.BuddList.elementAt(_homeNum!-1).buddId}  ",
                                           style: const TextStyle(
                                             //backgroundColor: Colors.black12,
                                             fontSize: 25.0,
@@ -97,7 +97,7 @@ class ShareCodeDialogPage {
                                       IconButton(
                                           onPressed:()async{
                                             /// コピーするとき
-                                            final data = ClipboardData(text: '${BuddListModel.BuddList!.elementAt(_homeNum!-1).buddId}');
+                                            final data = ClipboardData(text: '${BuddListModel.BuddList.elementAt(_homeNum!-1).buddId}');
                                             await Clipboard.setData(data);
                                           },
                                           icon: const Icon(Icons.content_copy),

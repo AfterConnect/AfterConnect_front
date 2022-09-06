@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:after_connect_v2/db/budd_db.dart';
 import 'package:after_connect_v2/models/budd_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../db/image_db.dart';
 import '../domain/budd.dart';
@@ -31,6 +34,8 @@ class _HomeEditPageState extends State<HomeEditPage> {
   final List<Budd> _budd = HomeEditPage._budd!;
   String? _newBuddName;
   String _viewBuddName = '初期状態';
+  final picker = ImagePicker();
+  File? imageFile;
 
   void _set(){
     _viewBuddName = _budd.elementAt(_homeNum-1).buddName;
@@ -78,6 +83,10 @@ class _HomeEditPageState extends State<HomeEditPage> {
                       _newDataCheck = true;
                       _viewBuddName = _newBuddName!;
                       debugPrint("故人の名前を更新！");
+                    }
+                    if(imageFile != null){
+                      ImageDb().imgUpload('budds/${_budd.elementAt(_homeNum-1).buddId}/budd_photo.png', imageFile!);
+                      imageFile == null;
                     }
                     if(_newDataCheck){
                       debugPrint("データ更新しました");
@@ -138,7 +147,7 @@ class _HomeEditPageState extends State<HomeEditPage> {
             Stack(
               children: [
                 Container(
-                  color:Colors.red,
+                  color:Colors.grey,
                   child: const SizedBox(
                     width: 100,
                     height: 100,
@@ -148,11 +157,17 @@ class _HomeEditPageState extends State<HomeEditPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Opacity(
-                      opacity:0.5,
+                      opacity:1.0,
                       child: SizedBox(
                         width: 100,
                         height: 100,
-                        child: Image.network('${_budd.elementAt(_homeNum-1).buddPhoto}'),
+                        child: (){
+                          if(imageFile == null) {
+                            return Image.network(_budd.elementAt(_homeNum - 1).buddPhoto);
+                          }else{
+                            return Image.file(imageFile!);
+                          }
+                        }(),
                       ),
                     ),
                   ],
@@ -183,7 +198,15 @@ class _HomeEditPageState extends State<HomeEditPage> {
                   ),
                   onTap: () async {
                     debugPrint('反応した！');
-                    ImageDb().imgUpload('budds/${_budd.elementAt(_homeNum-1).buddId}/budd_photo.png');
+                    final pickerFile = await ImagePicker().pickImage(
+                        source: ImageSource.gallery);
+                    if (pickerFile != null) {
+                      imageFile = File(pickerFile.path);
+                      setState(() {
+
+                      });
+                    }
+
                     await Future<void>.delayed(const Duration(milliseconds: 1000));
                     /*String? _imgUrl = '初期状態だよ';
                     _imgUrl = await ImageDb().imgDownloadPath('budds/${_budd.elementAt(_homeNum-1).buddId}/budd_photo.png');

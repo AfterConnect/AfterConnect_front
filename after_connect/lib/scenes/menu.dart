@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../db/budd_db.dart';
 import '../domain/budd.dart';
+import '../main.dart';
 import 'add_home_dialog_page.dart';
 import 'home.dart';
 import 'top.dart';
@@ -87,7 +88,8 @@ class _MenuState extends State<Menu> {
                 ),
 
                 ///スライドショー
-                OutlinedButton(
+                ///未実装につき非表示
+                /*OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
@@ -115,10 +117,11 @@ class _MenuState extends State<Menu> {
 
                 const SizedBox(
                   height: 10.0,
-                ),
+                ),*/
 
                 ///スケジュール通知
-                OutlinedButton(
+                ///未実装につき非表示
+                /*OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
@@ -145,7 +148,7 @@ class _MenuState extends State<Menu> {
 
                 const SizedBox(
                   height: 10.0,
-                ),
+                ),*/
 
                 ///仏壇共有コード入力
                 OutlinedButton(
@@ -180,33 +183,39 @@ class _MenuState extends State<Menu> {
                 ),
 
                 ///設定
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(width: 1.0, color: Colors.black),
-                    // primary: Colors.white,
-                    minimumSize: const Size.fromHeight(10),
-                  ),
-                  onPressed: (){
-                    //ルーティングで画面遷移管理
-                    Get.toNamed(UserConfPage.routeName);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 10.0,
+                Visibility(
+                  visible: (user!.providerData[0].providerId == 'password'),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(width: 1.0, color: Colors.black),
+                      // primary: Colors.white,
+                      minimumSize: const Size.fromHeight(10),
                     ),
-                    child:Text(
-                      '設定',
-                      style: TextStyle(
-                        color: Colors.grey[900],
-                        fontSize: 24.0,
+                    onPressed: (){
+                      //ルーティングで画面遷移管理
+                      Get.toNamed(UserConfPage.routeName);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10.0,
+                      ),
+                      child:Text(
+                        '設定',
+                        style: TextStyle(
+                          color: Colors.grey[900],
+                          fontSize: 24.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
 
-                const SizedBox(
-                  height: 10.0,
+                Visibility(
+                  visible: (user!.providerData[0].providerId == 'password'),
+                  child: const SizedBox(
+                    height: 10.0,
+                  ),
                 ),
 
                 ///お問い合わせ

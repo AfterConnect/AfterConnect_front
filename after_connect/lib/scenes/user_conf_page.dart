@@ -38,7 +38,8 @@ class UserConfPage extends StatelessWidget {
               children: [
 
                 ///ユーザー名変更
-                OutlinedButton(
+                ///開発者用設定項目
+                /*OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
@@ -65,7 +66,7 @@ class UserConfPage extends StatelessWidget {
 
                 const SizedBox(
                   height: 10.0,
-                ),
+                ),*/
 
 
                 ///パスワード変更
@@ -122,7 +123,7 @@ class UserConfPage extends StatelessWidget {
                 ),
 
                 ///ほげほげ
-                OutlinedButton(
+                /*OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(width: 1.0, color: Colors.black),
                     // primary: Colors.white,
@@ -145,7 +146,7 @@ class UserConfPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
+                ),*/
 
               ],
             ),

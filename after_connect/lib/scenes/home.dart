@@ -341,14 +341,7 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-
-                              color: (){
-                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['hana'])!).inSeconds) <= Home.lostTime){
-                                  return const Color.fromRGBO(255, 255, 255, 0.7);
-                                }else{
-                                  return null;
-                                }
-                              }(),
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
                               child: SizedBox(
                                 width: 65.0,
                                 height: 120,
@@ -362,13 +355,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Container(
-                              color: (){
-                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kome'])!).inSeconds) <= Home.lostTime){
-                                  return const Color.fromRGBO(255, 255, 255, 0.7);
-                                }else{
-                                  return null;
-                                }
-                              }(),
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
                               child: SizedBox(
                                 width: 65.0,
                                 height: 120,
@@ -382,13 +369,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Container(
-                              color: (){
-                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime){
-                                  return const Color.fromRGBO(255, 255, 255, 0.7);
-                                }else{
-                                  return null;
-                                }
-                              }(),
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
                               child: SizedBox(
                                 width: 65.0,
                                 height: 120,
@@ -402,13 +383,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Container(
-                              color: (){
-                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime){
-                                  return const Color.fromRGBO(255, 255, 255, 0.7);
-                                }else{
-                                  return null;
-                                }
-                              }(),
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
                               child: SizedBox(
                                 width: 65.0,
                                 height: 120,
@@ -422,13 +397,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             Container(
-                              color: (){
-                                if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kou'])!).inSeconds) <= Home.lostTime){
-                                  return const Color.fromRGBO(255, 255, 255, 0.7);
-                                }else{
-                                  return null;
-                                }
-                              }(),
+                              color: const Color.fromRGBO(255, 255, 255, 0.7),
                               child: SizedBox(
                                 width: 65.0,
                                 height: 120,

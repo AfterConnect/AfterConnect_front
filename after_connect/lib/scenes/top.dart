@@ -9,25 +9,24 @@ class Top extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Column(
+      body: Column(
         children: <Widget>[
           Flexible(
             flex: 1,
-            child:Column(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  'After Connect',
-                  style: TextStyle(
-                      fontSize: 50.0
-                  ),
+                  '祈',
+                  style: TextStyle(fontSize: 50.0),
                 ),
               ],
             ),
           ),
           Flexible(
             flex: 2,
-            child:Image.network('https://4.bp.blogspot.com/-vpajUL6jZkw/VMIu9i4l5aI/AAAAAAAAq2M/TPYfH7t6kXQ/s800/butsudan.png'),
+            child: Image.network(
+                'https://4.bp.blogspot.com/-vpajUL6jZkw/VMIu9i4l5aI/AAAAAAAAq2M/TPYfH7t6kXQ/s800/butsudan.png'),
           ),
           Container(
             padding: const EdgeInsets.symmetric(
@@ -42,15 +41,16 @@ class Top extends StatelessWidget {
                     // primary: Colors.white,
                     minimumSize: const Size.fromHeight(10),
                   ),
-                  onPressed: (){
-                    Get.toNamed(SignUpPage.routeName,arguments:[false, 'ユーザー登録']);
+                  onPressed: () {
+                    Get.toNamed(SignUpPage.routeName,
+                        arguments: [false, 'ユーザー登録']);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 10.0,
                     ),
-                    child:Text(
+                    child: Text(
                       'ユーザー登録',
                       style: TextStyle(
                         color: Colors.grey[900],
@@ -68,15 +68,15 @@ class Top extends StatelessWidget {
                     // primary: Colors.white,
                     minimumSize: const Size.fromHeight(10),
                   ),
-                  onPressed: (){
-                    Get.toNamed(LoginPage.routeName,arguments:[true, 'ログイン']);
+                  onPressed: () {
+                    Get.toNamed(LoginPage.routeName, arguments: [true, 'ログイン']);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 10.0,
                     ),
-                    child:Text(
+                    child: Text(
                       'ログイン',
                       style: TextStyle(
                         color: Colors.grey[900],

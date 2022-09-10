@@ -6,9 +6,11 @@ import 'package:after_connect_v2/scenes/budd_item_page.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
@@ -35,6 +37,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _homeNum = int.parse(Get.parameters['homeNum']!);
   List<Budd>? budd;
+  //final AudioCache _audio = AudioCache();
+  final _player = AudioPlayer();
   void _leftPage(){
     setState((){
       _homeNum--;
@@ -228,6 +232,29 @@ class _HomeState extends State<Home> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 150, right: 0, bottom: 0, left: 0),
+                                    child: Container(
+                                      height: 140,
+                                      width: 140,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black26,
+                                      ),
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 140,
+                                          height: 140,
+                                          child: Image.network(budd!.elementAt(_homeNum-1).buddPhoto),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+
                                   Center(
                                     child: Row(
                                       children: [
@@ -253,26 +280,24 @@ class _HomeState extends State<Home> {
                                             iconSize: 100,
                                           ),
                                         ),
-                                        Container(
+                                        const SizedBox(
+                                          height: 140,
+                                          width: 140,
+                                        ),
+                                        /*Container(
                                           height: 140,
                                           width: 140,
                                           decoration: const BoxDecoration(
                                             color: Colors.black26,
                                           ),
-                                          child: GestureDetector(
-                                            child: Center(
-                                              child: SizedBox(
-                                                width: 140,
-                                                height: 140,
-                                                child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
-                                              ),
+                                          child: Center(
+                                            child: SizedBox(
+                                              width: 140,
+                                              height: 140,
+                                              child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
                                             ),
-                                            onTap: () async {
-                                              debugPrint('反応した！');
-                                              //ImageDb().imgUpload('budds/test$_homeNum/budd_photo.png');
-                                            },
                                           ),
-                                        ),
+                                        ),*/
                                         IconButton(
                                           onPressed: ()async{
                                             debugPrint('右の仏壇を押したよ');
@@ -334,90 +359,129 @@ class _HomeState extends State<Home> {
                       ],
                     ),
 
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 350, right: 0, bottom: 0, left: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.7),
-                              child: SizedBox(
-                                width: 65.0,
-                                height: 120,
-                                child: () {
-                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['hana'])!).inSeconds) <= Home.lostTime){
-                                    return Image.asset('images/hana.png');
-                                  }else{
-                                    return null;
-                                  }
-                                }(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0, right: 0, bottom: 10, left: 0),
+                          child: Container(
+                            color: const Color.fromRGBO(255, 255, 255, 0.7),
+                            child: SizedBox(
+                              width: 325,
+                              height: 120,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    child: () {
+                                      if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['hana'])!).inSeconds) <= Home.lostTime){
+                                        return SizedBox(
+                                          width: 65.0,
+                                          height: 120,
+                                          child: Image.asset('images/hana.png'),
+                                        );
+                                      }else{
+                                        return null;
+                                      }
+                                    }(),
+                                  ),
+                                  SizedBox(
+                                    child: () {
+                                      if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kome'])!).inSeconds) <= Home.lostTime){
+                                        return SizedBox(
+                                          width: 65.0,
+                                          height: 120,
+                                          child: Image.asset('images/kome.png'),
+                                        );
+                                      }else{
+                                        return null;
+                                      }
+                                    }(),
+                                  ),
+                                  SizedBox(
+                                    child: () {
+                                      if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime){
+                                        return SizedBox(
+                                          width: 65.0,
+                                          height: 120,
+                                          child: Image.asset('images/toumyou.png'),
+                                        );
+                                      }else{
+                                        return null;
+                                      }
+                                    }(),
+                                  ),
+                                  SizedBox(
+                                    child: () {
+                                      if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime){
+                                        return SizedBox(
+                                          width: 65.0,
+                                          height: 120,
+                                          child: Image.asset('images/mizu.png'),
+                                        );
+                                      }else{
+                                        return null;
+                                      }
+                                    }(),
+                                  ),
+                                  SizedBox(
+                                    child: () {
+                                      if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kou'])!).inSeconds) <= Home.lostTime){
+                                        return SizedBox(
+                                          width: 65.0,
+                                          height: 120,
+                                          child: Image.asset('images/kou.png'),
+                                        );
+                                      }else{
+                                        return null;
+                                      }
+                                    }(),
+                                  ),
+                                ],
                               ),
                             ),
-                            Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.7),
-                              child: SizedBox(
-                                width: 65.0,
-                                height: 120,
-                                child: () {
-                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kome'])!).inSeconds) <= Home.lostTime){
-                                    return Image.asset('images/kome.png');
-                                  }else{
-                                    return null;
-                                  }
-                                }(),
-                              ),
-                            ),
-                            Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.7),
-                              child: SizedBox(
-                                width: 65.0,
-                                height: 120,
-                                child: () {
-                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['toumyou'])!).inSeconds) <= Home.lostTime){
-                                    return Image.asset('images/toumyou.png');
-                                  }else{
-                                    return null;
-                                  }
-                                }(),
-                              ),
-                            ),
-                            Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.7),
-                              child: SizedBox(
-                                width: 65.0,
-                                height: 120,
-                                child: () {
-                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['mizu'])!).inSeconds) <= Home.lostTime){
-                                    return Image.asset('images/mizu.png');
-                                  }else{
-                                    return null;
-                                  }
-                                }(),
-                              ),
-                            ),
-                            Container(
-                              color: const Color.fromRGBO(255, 255, 255, 0.7),
-                              child: SizedBox(
-                                width: 65.0,
-                                height: 120,
-                                child: () {
-                                  if((DateTime.now().difference((budd!.elementAt(_homeNum-1).buddItems['kou'])!).inSeconds) <= Home.lostTime){
-                                    return Image.asset('images/kou.png');
-                                  }else{
-                                    return null;
-                                  }
-                                }(),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 0, right: 0, bottom: 90, left: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(121, 121, 121, 0.6),
+                                  borderRadius: BorderRadius.circular(30),
+                                  border: Border.all(
+                                    color: const Color.fromRGBO(121, 121, 121, 0.6),
+                                  ),
+                                ),
+                                child: IconButton(
+                                  onPressed: ()async{
+                                    debugPrint('Homeにておりんボタンが押されました');
+                                    //_audio.play('orin_sound.mp3');
+                                    //_audio.load('assets/orin_sound.mp3');
+                                    await _player.setAsset('assets/orin_sound.mp3');
+                                    await _player.play();
+                                  },
+                                  icon: const Icon(
+                                    Icons.volume_up,
+                                    color: Color.fromRGBO(255, 255, 255, 1),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      ],
                     ),
+
+
 
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 50.0,
+                        vertical: 30.0,
                         horizontal: 50.0,
                       ),
                       child: Column(

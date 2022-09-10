@@ -17,7 +17,7 @@ class Top extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  'After Connect',
+                  '祈',
                   style: TextStyle(
                       fontSize: 50.0
                   ),

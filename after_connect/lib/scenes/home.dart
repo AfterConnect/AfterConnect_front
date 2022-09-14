@@ -6,6 +6,7 @@ import 'package:after_connect_v2/scenes/budd_item_page.dart';
 import 'package:after_connect_v2/scenes/home_edit_page.dart';
 import 'package:after_connect_v2/scenes/make_home_dialog_page.dart';
 import 'package:after_connect_v2/scenes/share_code_dialog_page.dart';
+import 'package:decorated_icon/decorated_icon.dart';
 //import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -266,7 +267,15 @@ class _HomeState extends State<Home> {
                                               debugPrint('左の仏壇を押したよ');
                                               _leftPage();
                                             },
-                                            icon: const Icon(Icons.arrow_left),
+                                            icon: const DecoratedIcon(
+                                              Icons.arrow_left,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Colors.black, //色
+                                                  blurRadius: 42, //ぼやけ具合
+                                                ),
+                                              ],
+                                            ),
                                             color: Colors.red,
                                             iconSize: 100,
                                           ),
@@ -284,20 +293,6 @@ class _HomeState extends State<Home> {
                                           height: 140,
                                           width: 140,
                                         ),
-                                        /*Container(
-                                          height: 140,
-                                          width: 140,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black26,
-                                          ),
-                                          child: Center(
-                                            child: SizedBox(
-                                              width: 140,
-                                              height: 140,
-                                              child: Image.network('${budd!.elementAt(_homeNum-1).buddPhoto}'),
-                                            ),
-                                          ),
-                                        ),*/
                                         IconButton(
                                           onPressed: ()async{
                                             debugPrint('右の仏壇を押したよ');
@@ -316,7 +311,15 @@ class _HomeState extends State<Home> {
                                               _rightPage();
                                             }
                                           },
-                                          icon: const Icon(Icons.arrow_right),
+                                          icon: const DecoratedIcon(
+                                              Icons.arrow_right,
+                                              shadows: [
+                                                BoxShadow(
+                                                  color: Colors.black, //色
+                                                  blurRadius: 42, //ぼやけ具合
+                                                ),
+                                              ],
+                                          ),
                                           color: Colors.red,
                                           iconSize: 100,
                                         ),
@@ -378,7 +381,12 @@ class _HomeState extends State<Home> {
                                         return SizedBox(
                                           width: 65.0,
                                           height: 120,
-                                          child: Image.asset('images/hana.png'),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Image.asset('images/hana.png'),
+                                            ],
+                                          ),
                                         );
                                       }else{
                                         return null;
@@ -391,7 +399,12 @@ class _HomeState extends State<Home> {
                                         return SizedBox(
                                           width: 65.0,
                                           height: 120,
-                                          child: Image.asset('images/kome.png'),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Image.asset('images/kome.png'),
+                                            ],
+                                          ),
                                         );
                                       }else{
                                         return null;
@@ -404,7 +417,12 @@ class _HomeState extends State<Home> {
                                         return SizedBox(
                                           width: 65.0,
                                           height: 120,
-                                          child: Image.asset('images/toumyou.png'),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Image.asset('images/toumyou.png'),
+                                            ],
+                                          ),
                                         );
                                       }else{
                                         return null;
@@ -417,7 +435,12 @@ class _HomeState extends State<Home> {
                                         return SizedBox(
                                           width: 65.0,
                                           height: 120,
-                                          child: Image.asset('images/mizu.png'),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Image.asset('images/mizu.png'),
+                                            ],
+                                          ),
                                         );
                                       }else{
                                         return null;
@@ -430,7 +453,12 @@ class _HomeState extends State<Home> {
                                         return SizedBox(
                                           width: 65.0,
                                           height: 120,
-                                          child: Image.asset('images/kou.png'),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Image.asset('images/kou.png'),
+                                            ],
+                                          ),
                                         );
                                       }else{
                                         return null;
@@ -489,12 +517,12 @@ class _HomeState extends State<Home> {
                         children: [
 
 
-                          OutlinedButton(
+                          ElevatedButton(
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(
                                   width: 1.0, color: Colors.black),
-                              // primary: Colors.white,
-                              backgroundColor: Colors.white70,
+
+                              backgroundColor: Colors.white,
                               minimumSize: const Size.fromHeight(10),
                             ),
                             onPressed: () {
